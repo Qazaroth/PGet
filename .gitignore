@@ -1,0 +1,11 @@
+curlz/
+online/
+scripts/
+temp/
+tests/
+list/
+hashify.bat
+hget.bat
+bin/locallist.bget
+bin/config.bget
+.idea/
