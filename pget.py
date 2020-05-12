@@ -1,29 +1,33 @@
-from pathlib import  Path
+from pathlib import Path
 from bin.download import Downloader
 
 binDir = "./bin"
 scriptsDir = "./scripts"
 
 configDir = "{b}/config.pget".format(b=binDir)
-
+hashDir = "{b}/hash.txt".format(b=binDir)
 
 def init():
-    print("Checking if config.pget exists...")
-    configFile = Path(configDir)
+    hashFile = Path(hashDir)
 
-    if not configFile.is_file():
-        print("config.pget does not exist... making one...")
-        configFile = open(configDir, "w+")
-        configFile.write("[DO NOT DELETE]")
-        print("Made config.pget. Do not delete this file!")
+    if hashFile.is_file():
+        print("Checking if config.pget exists...")
+        configFile = Path(configDir)
+
+        if not configFile.is_file():
+            print("config.pget does not exist... making one...")
+            configFile = open(configDir, "w+")
+            configFile.write("[DO NOT DELETE]")
+            print("Made config.pget. Do not delete this file!")
+        else:
+            print("config.pget exist! Do not delete this file!")
     else:
-        print("config.pget exist! Do not delete this file!")
-
-
+        print("Please get PGet from Github...")
 
 
 def main():
     init()
+
 
 main()
 
