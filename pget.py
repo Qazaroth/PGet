@@ -218,6 +218,7 @@ def main():
     elif cmd == "-exit":
         print("Stopping pget...")
         sys.exit(0)
+    input("Press ENTER to continue...")
     main()
 
 
