@@ -13,8 +13,9 @@ Get Python here: https://www.python.org/downloads/
 1. [Introduction](https://github.com/Qazaroth/PGet/blob/master/README.md#introduction)
 2. [Features](https://github.com/Qazaroth/PGet/blob/master/README.md#features)
 3. [Running PGet](https://github.com/Qazaroth/PGet/blob/master/README.md#running-pget)
-4. [Switches](https://github.com/Qazaroth/PGet/blob/master/README.md#switches)
-5. [Contact](https://github.com/Qazaroth/PGet/blob/master/README.md#contact)
+4. [Bugs & Fixes](https://github.com/Qazaroth/PGet/blob/master/README.md#bugs-and-fixes)
+5. [Switches](https://github.com/Qazaroth/PGet/blob/master/README.md#switches)
+6. [Contact](https://github.com/Qazaroth/PGet/blob/master/README.md#contact)
 
 ## Introduction
 PGet is essentially just a python port for BGet, but now, it's BGet but for Python. It's a tool for handling Python
@@ -38,6 +39,10 @@ Here's an example:
 Fetching a script named `test` from the server. The easiest way to do this would be:
 1. Start pget.py
 2. Type in `-get "test"`
+
+## Bugs and Fixes:
+If it says that there is no new update while there clearly is, you can navigate to bin/hash.txt and change the value
+inside to 0 or just download the new update from github. This rarely occurs but there are chances it might.
 
 ## Switches
 You'll see the available switches/commands when you start PGet.
