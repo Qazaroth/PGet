@@ -117,6 +117,7 @@ def main():
                         shutil.rmtree(scriptDirS)
                         print("Deleted {f}.".format(f=scriptName))
                         break
+            scriptListFile.close()
         else:
             print("Scripts list file missing, please do -updatescriptlist.")
     elif cmd == "-list":
@@ -139,6 +140,7 @@ def main():
                 scriptAuthor = scriptDetails[6]
 
                 print("{n} - {sn} by {a}: {d}".format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
+            scriptListFile.close()
         else:
             print("Scripts list missing. Do -updatescriptlist .")
     elif cmd == "-get":
@@ -183,6 +185,7 @@ def main():
                         scriptHashFile = open("./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory), "w+")
                         scriptHashFile.write(scriptHash)
                         print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                        scriptHashFile.close()
                     else:
                         print("{f} already exists... checking for update instead.".format(f=scriptName))
                         scriptHashFile = open("./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory), "r")
@@ -195,9 +198,12 @@ def main():
                                                   "w+")
                             scriptHashFile.write(scriptHash)
                             print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            scriptHashFile.close()
                         else:
                             print("You already have the latest version, or update script list.")
+                        scriptHashFile.close()
                     break
+            scriptListFile.close()
     elif cmd == "-updatescriptlist":
         print("Updating scripts list...")
         scriptListFile = Path(scriptListDir)
@@ -208,6 +214,7 @@ def main():
         else:
             scriptListFile = open(scriptListDir, "w+")
             scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+        scriptListFile.close()
         print("Updated scripts list.")
     elif cmd == "-exit":
         print("Stopping pget...")

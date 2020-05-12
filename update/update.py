@@ -91,24 +91,25 @@ if hashFileExists:
         print("There are currently no new updates.")
     else:
         print("There's a new update! Downloading...")
-        hashFile = open(hashDir, "w+")
-        hashFile.write(requests.get(upgrade_Hash_Location).content.decode("utf8"))
+        tmpFile = open(hashDir, "w+")
+        tmpFile.write(requests.get(upgrade_Hash_Location).content.decode("utf8"))
 
-        pgetFile = open(md + "/pget.py", "w+")
-        pgetFile.write(requests.get(pget_location).content.decode("utf8"))
+        tmpFile = open(md + "/pget.py", "w+")
+        tmpFile.write(requests.get(pget_location).content.decode("utf8"))
 
-        readmeFile = open(md + "/README.md", "w+")
-        readmeFile.write(requests.get(readme_location).content.decode("utf8"))
+        tmpFile = open(md + "/README.md", "w+")
+        tmpFile.write(requests.get(readme_location).content.decode("utf8"))
 
-        versionFile = open(binDir + "/version.txt", "w+")
-        versionFile.write(requests.get(version_location).content.decode("utf8"))
+        tmpFile = open(binDir + "/version.txt", "w+")
+        tmpFile.write(requests.get(version_location).content.decode("utf8"))
 
-        updateFile = open(updateDir + "/update.py", "w+")
-        updateFile.write(requests.get(upgrade_Script_Location).content.decode("utf8"))
+        tmpFile = open(updateDir + "/update.py", "w+")
+        tmpFile.write(requests.get(upgrade_Script_Location).content.decode("utf8"))
 
-        downloadpyFile = open(binDir + "/download.py", "w+")
-        downloadpyFile.write(requests.get(downloadpy_location).content.decode("utf8"))
+        tmpFile = open(binDir + "/download.py", "w+")
+        tmpFile.write(requests.get(downloadpy_location).content.decode("utf8"))
 
+        tmpFile.close()
         print("Succesfully updated PGet!")
 else:
     print("Missing hash file. Please redownload from github!")
