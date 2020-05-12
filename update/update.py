@@ -6,8 +6,10 @@ upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/
 upgrade_Script_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/update/update.py"
 pget_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/pget.py"
 readme_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/README.md"
+version_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/version.txt"
+downloadpy_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/download.py"
 
-mainDir = "././"
+mainDir = "../"
 binDir = mainDir + "bin"
 scriptsDir = mainDir + "scripts"
 updateDir = mainDir + "update"
@@ -27,6 +29,11 @@ if hashFile.is_file():
         print("There are currently no new updates.")
     else:
         print("There's a new update! Downloading...")
-        Downloader.downloadFile(upgrade_Hash_Location, hashDir)
+        Downloader.downloadFile(Downloader, upgrade_Hash_Location, hashDir)
+        Downloader.downloadFile(Downloader, pget_location, mainDir)
+        Downloader.downloadFile(Downloader, readme_location, mainDir)
+        Downloader.downloadFile(Downloader, version_location, binDir)
+        Downloader.downloadFile(Downloader, upgrade_Script_Location, updateDir)
+        Downloader.downloadFile(Downloader, downloadpy_location, binDir)
 else:
     print("Hash file missing! Please redownload from github!")
