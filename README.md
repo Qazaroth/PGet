@@ -6,7 +6,7 @@ Python Version Used: **3.8**
 
 Get Python here: https://www.python.org/downloads/
 
-## CMD (Outdated Screenshot):
+## CMD:
 ![Pget list error](https://github.com/Qazaroth/pget-list/blob/master/images/cmdSS1.png)
 
 ![Pget list online](https://github.com/Qazaroth/pget-list/blob/master/images/cmdSS2.png)
