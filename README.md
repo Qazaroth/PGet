@@ -1,5 +1,5 @@
 # PGet
-Python port for BGet, at least that was the main idea... You can run the
+Python port for [BGet](https://github.com/jahwi/bget), at least that was the main idea... You can run the
 files either through the batch files provided or your own command prompt.
 
 Python Version Used: **3.8**
