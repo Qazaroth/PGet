@@ -6,7 +6,7 @@ Python Version Used: **3.8**
 
 Get Python here: https://www.python.org/downloads/
 
-## CMD:
+## CMD (Outdated Screenshot):
 ![Pget screenshot](https://github.com/Qazaroth/pget-list/blob/master/images/screenshot1.png)
 
 ## Table of Contents
