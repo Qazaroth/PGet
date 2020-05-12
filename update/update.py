@@ -109,12 +109,6 @@ if hashFileExists:
         downloadpyFile = open(binDir + "/download.py", "w+")
         downloadpyFile.write(requests.get(downloadpy_location).content.decode("utf8"))
 
-        hashFile.close()
-        pgetFile.close()
-        readmeFile.close()
-        versionFile.close()
-        updateFile.close()
-        downloadpyFile.close()
         print("Succesfully updated PGet!")
 else:
     print("Missing hash file. Please redownload from github!")
