@@ -1,4 +1,10 @@
 from pathlib import Path
+from os import system, name
+import os
+import shutil
+import sys
+from time import sleep
+import requests
 from bin.download import Downloader
 
 binDir = "./bin"
@@ -6,38 +12,163 @@ scriptsDir = "./scripts"
 
 configDir = "{b}/config.pget".format(b=binDir)
 hashDir = "{b}/hash.txt".format(b=binDir)
+scriptListDir = "{b}/list.txt".format(b=scriptsDir)
+
+upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
+script_List_Location = "https://raw.githubusercontent.com/Qazaroth/pget-list/master/master.txt"
+
 
 def init():
     hashFile = Path(hashDir)
 
+    print("Checking if hash file exists...")
     if hashFile.is_file():
+        print("Hash file exists.")
+
+        scriptListFile = Path(scriptListDir)
+
+        if not scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "w+")
+            scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+
         print("Checking if config.pget exists...")
         configFile = Path(configDir)
 
         if not configFile.is_file():
             print("config.pget does not exist... making one...")
             configFile = open(configDir, "w+")
-            configFile.write("[DO NOT DELETE]")
+            configFile.write("[DO NOT DELETE]\n")
+            configFile.write("autoUpdate=0")
             print("Made config.pget. Do not delete this file!")
         else:
             print("config.pget exist! Do not delete this file!")
+            configFile = open(configDir, "r")
+            configs = configFile.read().splitlines()
+            autoUpdate = 0
+
+            try:
+                autoUpdate = configs[1]["autoUpdate".__len__() + 1:]
+            except ValueError:
+                autoUpdate = -1
+                print("An error occured while attempting to read config.pget... Please delete the file and restart "
+                      "PGet.")
+
+            print("Checking to see if autoUpdate is enabled...")
+            if autoUpdate == 1:
+                print("AutoUpdate is enabled.Checking for new updates...")
+                onlineHash = requests.get(upgrade_Hash_Location).content.decode("utf8")
+                localHashFile = open(hashDir, "r+")
+                localHash = localHashFile.read()
+
+                if localHash == onlineHash:
+                    print("Your PGet is currently up-to-date. No updates needed.")
+                else:
+                    print("There is a newer version on Github! Please run updater.py.")
+            else:
+                print("AutoUpdate is disabled.")
     else:
         print("Please get PGet from Github...")
 
 
 def main():
-    init()
+    if name == "nt":
+        system("cls")
+    else:
+        system('clear')
+    print("---------------------------------------------------------------------------")
+    print("Usage: -command {args}")
+    print("-get \"SCRIPT_NAME\"")
+    print("-delete \"SCRIPT_NAME\"")
+    print("-updatescriptlist")
+    print("-exit")
+    print("---------------------------------------------------------------------------")
+    cmdInputRaw = input("Command: ")
+    cmdInput = cmdInputRaw.split()
+    cmd = cmdInput[0].lower()
+    args = cmdInputRaw[cmd.__len__()::].strip() or None
+
+    if cmd == "-delete":
+        argsArray = args.split("\"")
+        inpScriptName = argsArray[1]
+
+        print("Deleting {f}...".format(f=inpScriptName))
+
+        scriptDir = "./scripts/{s}".format(s=inpScriptName)
+        scriptDir = Path(scriptDir)
+
+        if scriptDir.is_dir():
+            shutil.rmtree(scriptDir)
+            print("Deleted {f}.".format(f=inpScriptName))
+        else:
+            print("Unable to delete {f}... Either it does not exist or it's a file, please delete it manually."
+                  .format(f=inpScriptName))
+
+    elif cmd == "-get":
+        argsArray = args.split("\"")
+        inpScriptName = argsArray[1]
+
+        scriptListFile = Path(scriptListDir)
+
+        if scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
+            listFileContents = scriptListFileContent.split("--")
+            listFileContents.pop(0)
+
+            for i in listFileContents:
+                scriptDetails = i.split(",")
+                scriptName = scriptDetails[1]
+                scriptURL = scriptDetails[2]
+                scriptHash = scriptDetails[5]
+                scriptAuthor = scriptDetails[6]
+
+                print(scriptDetails)
+
+                if inpScriptName == scriptName:
+                    file_name = scriptURL.split("/")[-1]
+                    dir = "./scripts/{s}/{f}".format(s=scriptName, f=file_name)
+                    hashScriptDir = "./scripts/{s}/hash.txt".format(s=scriptName)
+
+                    scriptDir = "./scripts/{s}".format(s=scriptName)
+
+                    tmpFile = Path(scriptDir)
+
+                    if not tmpFile.is_dir():
+                        print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                        os.mkdir(scriptDir)
+                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                        scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "w+")
+                        scriptHashFile.write(scriptHash)
+                        print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                    else:
+                        print("{f} already exists... checking for update instead.".format(f=scriptName))
+                        scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "r")
+                        scriptOldHash = scriptHashFile.read()
+
+                        if scriptOldHash != scriptHash:
+                            print("Updating {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                            Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                            scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "w+")
+                            scriptHashFile.write(scriptHash)
+                            print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                        else:
+                            print("You already have the latest version, or update script list.")
+    elif cmd == "-updatescriptlist":
+        print("Updating scripts list...")
+        scriptListFile = Path(scriptListDir)
+
+        if scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "w+")
+            scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+        else:
+            scriptListFile = open(scriptListDir, "w+")
+            scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+        print("Updated scripts list.")
+    elif cmd == "-exit":
+        print("Stopping pget...")
+        sys.exit(0)
 
 
+init()
+sleep(2)
 main()
-
-# url = "https://raw.githubusercontent.com/Qazaroth/pget-list/master/test.py"
-
-# file_name = url.split("/")[-1]
-# dir = "{s}/{f}".format(s=scriptsDir, f=file_name)
-
-# f = Path(dir)
-
-# print("Beginning file download...")
-
-# Downloader.downloadScript(url)

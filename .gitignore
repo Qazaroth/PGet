@@ -1,10 +1,5 @@
-curlz/
-online/
 scripts/
-temp/
-tests/
 list/
-hashify.bat
 hget.bat
 bin/__pycache__
 bin/hashgenerator.py
