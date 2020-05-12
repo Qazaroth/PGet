@@ -1,4 +1,4 @@
 @echo off
 title PGet Updater
-python update/update.py
+python update\update.py
 pause
