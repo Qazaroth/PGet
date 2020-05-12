@@ -63,7 +63,7 @@ def init():
                 if localHash == onlineHash:
                     print("Your PGet is currently up-to-date. No updates needed.")
                 else:
-                    print("There is a newer version on Github! Please run updater.py.")
+                    print("There is a newer version on Github! Please run updater.bat.")
             else:
                 print("AutoUpdate is disabled.")
     else:
@@ -103,14 +103,11 @@ def main():
             for i in listFileContents:
                 scriptDetails = i.split(",")
                 scriptName = scriptDetails[1]
-                scriptURL = scriptDetails[2]
-                scriptHash = scriptDetails[5]
-                scriptAuthor = scriptDetails[6]
                 scriptCategory = scriptDetails[7]
 
                 if inpScriptName == scriptName:
                     print("{f} script exists in database, now checking if it's downloaded locally...".format(
-                        f=scriptName
+                                                                                                    f=scriptName
                                                                                                              ))
                     scriptDirS = "./scripts/{c}/{s}".format(c=scriptCategory, s=scriptName)
                     scriptDir = Path(scriptDirS)
@@ -141,10 +138,7 @@ def main():
                 scriptDesc = scriptDetails[3]
                 scriptAuthor = scriptDetails[6]
 
-                print("{n} - {sn} by {a}: {d}".format(n=scriptNo,
-                                                      sn=scriptName,
-                                                      a=scriptAuthor,
-                                                     d=scriptDesc))
+                print("{n} - {sn} by {a}: {d}".format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
         else:
             print("Scripts list missing. Do -updatescriptlist .")
     elif cmd == "-get":
@@ -218,6 +212,8 @@ def main():
     elif cmd == "-exit":
         print("Stopping pget...")
         sys.exit(0)
+
+    sleep(2)
     input("Press ENTER to continue...")
     main()
 
