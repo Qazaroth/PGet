@@ -265,6 +265,8 @@ def main():
                         scriptHashFile.close()
                     break
             scriptListFile.close()
+        else:
+            print("Local script lists missing... Do -updatescriptlist .")
     elif cmd == "-updatescriptlist":
         print("Updating scripts list...")
         scriptListFile = Path(scriptListDir)

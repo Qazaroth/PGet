@@ -7,7 +7,11 @@ Python Version Used: **3.8**
 Get Python here: https://www.python.org/downloads/
 
 ## CMD (Outdated Screenshot):
-![Pget screenshot](https://github.com/Qazaroth/pget-list/blob/master/images/screenshot1.png)
+![Pget list error](https://github.com/Qazaroth/pget-list/blob/master/images/cmdSS1.png)
+
+![Pget list online](https://github.com/Qazaroth/pget-list/blob/master/images/cmdSS2.png)
+
+![Pget get script](https://github.com/Qazaroth/pget-list/blob/master/images/cmdSS3.png)
 
 ## Table of Contents
 1. [Introduction](https://github.com/Qazaroth/PGet/blob/master/README.md#introduction)
