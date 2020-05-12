@@ -64,7 +64,10 @@ if hashFileExists:
     configDir = "/config.pget"
     hashDir = "/hash.txt"
 
+    md = ""
+
     if whichDir == 1:
+        md = mainDir
         binDir = mainDir + "bin"
         scriptsDir = mainDir + "scripts"
         updateDir = mainDir + "update"
@@ -72,6 +75,7 @@ if hashFileExists:
         configDir = binDir + "/config.pget"
         hashDir = binDir + "/hash.txt"
     elif whichDir == 2:
+        md = mainDir2
         binDir = mainDir2 + "bin"
         scriptsDir = mainDir2 + "scripts"
         updateDir = mainDir2 + "update"
@@ -89,10 +93,26 @@ if hashFileExists:
         print("There's a new update! Downloading...")
         hashFile = open(hashDir, "w+")
         hashFile.write(requests.get(upgrade_Hash_Location).content.decode("utf8"))
-        downloadFile(pget_location, mainDir)
-        downloadFile(readme_location, mainDir)
-        downloadFile(version_location, binDir)
-        downloadFile(upgrade_Script_Location, updateDir)
-        downloadFile(downloadpy_location, binDir)
+        hashFile.close()
+
+        pgetFile = open(md + "/pget.py", "w+")
+        pgetFile.write(requests.get(pget_location).content.decode("utf8"))
+        pgetFile.close()
+
+        readmeFile = open(md + "/README.md", "w+")
+        readmeFile.write(requests.get(readme_location).content.decode("utf8"))
+        readmeFile.close()
+
+        versionFile = open(binDir + "/version.txt", "w+")
+        versionFile.write(requests.get(readme_location).content.decode("utf8"))
+        versionFile.close()
+
+        updateFile = open(updateDir + "/update.py", "w+")
+        readmeFile.write(requests.get(readme_location).content.decode("utf8"))
+        readmeFile.close()
+
+        downloadpyFile = open(binDir + "/download.py", "w+")
+        downloadpyFile.write(requests.get(readme_location).content.decode("utf8"))
+        downloadpyFile.close()
 else:
     print("Missing hash file. Please redownload from github!")
