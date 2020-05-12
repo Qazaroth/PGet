@@ -9,6 +9,7 @@ from bin.download import Downloader
 
 binDir = "./bin"
 scriptsDir = "./scripts"
+tempDir = "./temp"
 
 configDir = "{b}/config.pget".format(b=binDir)
 hashDir = "{b}/hash.txt".format(b=binDir)
@@ -30,6 +31,11 @@ def init():
         if not scriptListFile.is_file():
             scriptListFile = open(scriptListDir, "w+")
             scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+
+        tmpDir = Path(tempDir)
+
+        if not tmpDir.is_dir():
+            os.mkdir(tempDir)
 
         print("Checking if config.pget exists...")
         configFile = Path(configDir)
@@ -67,7 +73,7 @@ def init():
             else:
                 print("AutoUpdate is disabled.")
     else:
-        print("Please get PGet from Github...")
+        print("Please redownload PGet from Github...")
 
 
 def main():
@@ -80,7 +86,7 @@ def main():
     print("-get \"SCRIPT_NAME\"")
     print("-delete \"SCRIPT_NAME\"")
     print("-updatescriptlist")
-    print("-list")
+    print("-list {local|online}")
     print("-exit")
     print("---------------------------------------------------------------------------")
     cmdInputRaw = input("Command: ")
@@ -107,8 +113,8 @@ def main():
 
                 if inpScriptName == scriptName:
                     print("{f} script exists in database, now checking if it's downloaded locally...".format(
-                                                                                                    f=scriptName
-                                                                                                             ))
+                        f=scriptName
+                    ))
                     scriptDirS = "./scripts/{c}/{s}".format(c=scriptCategory, s=scriptName)
                     scriptDir = Path(scriptDirS)
 
@@ -121,14 +127,70 @@ def main():
         else:
             print("Scripts list file missing, please do -updatescriptlist.")
     elif cmd == "-list":
-        scriptListFile = Path(scriptListDir)
+        # 0 - Local, 1 - Online
+        serverChosen = 0
+        if args is not None:
+            argsArray = args.split("\"")
+            server = argsArray[0].lower()
 
-        if scriptListFile.is_file():
-            print("Script Lists: ")
+            if server == "online":
+                serverChosen = 1
+                print("Online scripts list chosen.")
+            elif server == "local":
+                serverChosen = 0
+                print("Local scripts list chosen.")
+            else:
+                serverChosen = 0
+                print("Unknown server specified. Defaulting to local...")
+        else:
+            print("No server specified, defaulting to local.")
 
-            scriptListFile = open(scriptListDir, "r")
-            scriptListFileContent = scriptListFile.read()
-            listFileContents = scriptListFileContent.split("--")
+        if serverChosen == 0:
+            scriptListFile = Path(scriptListDir)
+            if scriptListFile.is_file():
+                print("Local Script Lists: ")
+
+                scriptListFile = open(scriptListDir, "r")
+                scriptListFileContent = scriptListFile.read()
+
+                listFileContents = scriptListFileContent.split("--")
+                listFileContents.pop(0)
+
+                for i in listFileContents:
+                    scriptNo = listFileContents.index(i)
+                    scriptDetails = i.split(",")
+
+                    scriptName = scriptDetails[1]
+                    scriptDesc = scriptDetails[3]
+                    scriptAuthor = scriptDetails[6]
+
+                    print("{n} - {sn} by {a}: {d}".format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
+                scriptListFile.close()
+            else:
+                print("Scripts list missing. Do -updatescriptlist .")
+        elif serverChosen == 1:
+            tmpFile = Path(tempDir)
+
+            if tmpFile.is_dir():
+                tmpFile = Path(tempDir + "/list.pgettmp")
+
+                if tmpFile.is_file():
+                    os.remove(tempDir + "/list.pgettmp")
+
+                tmpFile = open(tempDir + "/list.pgettmp", "w+")
+
+                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
+            else:
+                os.mkdir(tempDir)
+                tmpFile = open(tempDir + "/list.pgettmp", "w+")
+                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
+
+            print("Online Script Lists: ")
+
+            tmpFile = open(tempDir + "/list.pgettmp", "r")
+            tmpFileContent = tmpFile.read()
+
+            listFileContents = tmpFileContent.split("--")
             listFileContents.pop(0)
 
             for i in listFileContents:
@@ -140,9 +202,8 @@ def main():
                 scriptAuthor = scriptDetails[6]
 
                 print("{n} - {sn} by {a}: {d}".format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
-            scriptListFile.close()
-        else:
-            print("Scripts list missing. Do -updatescriptlist .")
+            tmpFile.close()
+            os.remove(tempDir + "/list.pgettmp")
     elif cmd == "-get":
         argsArray = args.split("\"")
         inpScriptName = argsArray[1]
