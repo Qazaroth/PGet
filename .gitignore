@@ -6,6 +6,6 @@ tests/
 list/
 hashify.bat
 hget.bat
-bin/locallist.bget
+bin/hashgenerator.py
 bin/config.bget
 .idea/
