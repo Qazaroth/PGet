@@ -30,7 +30,7 @@ command line!
 5. Update feature: PGet also updates itself or at least checks for new updates so that you are always up-to-date.
 
 ## Running PGet
-For Windows Users: You can use the batch files provided
+For Windows Users: You can use the batch files provided <br>
 For Non-Windows Users: I'm not sure...
 
 Here's an example:
