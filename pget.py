@@ -90,19 +90,37 @@ def main():
     if cmd == "-delete":
         argsArray = args.split("\"")
         inpScriptName = argsArray[1]
+        print("Checking if script {s} exists...".format(s=inpScriptName))
+        scriptListFile = Path(scriptListDir)
 
-        print("Deleting {f}...".format(f=inpScriptName))
+        if scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
+            listFileContents = scriptListFileContent.split("--")
+            listFileContents.pop(0)
 
-        scriptDir = "./scripts/{s}".format(s=inpScriptName)
-        scriptDir = Path(scriptDir)
+            for i in listFileContents:
+                scriptDetails = i.split(",")
+                scriptName = scriptDetails[1]
+                scriptURL = scriptDetails[2]
+                scriptHash = scriptDetails[5]
+                scriptAuthor = scriptDetails[6]
+                scriptCategory = scriptDetails[7]
 
-        if scriptDir.is_dir():
-            shutil.rmtree(scriptDir)
-            print("Deleted {f}.".format(f=inpScriptName))
+                if inpScriptName == scriptName:
+                    print("{f} script exists in database, now checking if it's downloaded locally...".format(
+                        f=scriptName
+                                                                                                             ))
+                    scriptDirS = "./scripts/{c}/{s}".format(c=scriptCategory, s=scriptName)
+                    scriptDir = Path(scriptDirS)
+
+                    if scriptDir.is_dir():
+                        print("Script {f} is downloaded locally, deleting...".format(f=scriptName))
+                        shutil.rmtree(scriptDirS)
+                        print("Deleted {f}.".format(f=scriptName))
+                        break
         else:
-            print("Unable to delete {f}... Either it does not exist or it's a file, please delete it manually."
-                  .format(f=inpScriptName))
-
+            print("Scripts list file missing, please do -updatescriptlist.")
     elif cmd == "-get":
         argsArray = args.split("\"")
         inpScriptName = argsArray[1]
@@ -121,15 +139,22 @@ def main():
                 scriptURL = scriptDetails[2]
                 scriptHash = scriptDetails[5]
                 scriptAuthor = scriptDetails[6]
+                scriptCategory = scriptDetails[7]
+
+                catDir = "./scripts/{c}".format(c=scriptCategory)
+                catDir = Path(catDir)
+
+                if not catDir.is_dir():
+                    os.mkdir(catDir)
 
                 print(scriptDetails)
 
                 if inpScriptName == scriptName:
                     file_name = scriptURL.split("/")[-1]
-                    dir = "./scripts/{s}/{f}".format(s=scriptName, f=file_name)
-                    hashScriptDir = "./scripts/{s}/hash.txt".format(s=scriptName)
+                    dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                    hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
 
-                    scriptDir = "./scripts/{s}".format(s=scriptName)
+                    scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
 
                     tmpFile = Path(scriptDir)
 
@@ -137,22 +162,24 @@ def main():
                         print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
                         os.mkdir(scriptDir)
                         Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                        scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "w+")
+                        scriptHashFile = open("./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory), "w+")
                         scriptHashFile.write(scriptHash)
                         print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
                     else:
                         print("{f} already exists... checking for update instead.".format(f=scriptName))
-                        scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "r")
+                        scriptHashFile = open("./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory), "r")
                         scriptOldHash = scriptHashFile.read()
 
                         if scriptOldHash != scriptHash:
                             print("Updating {f} by {a}...".format(f=file_name, a=scriptAuthor))
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                            scriptHashFile = open("./scripts/{s}/hash.txt".format(s=scriptName), "w+")
+                            scriptHashFile = open("./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory),
+                                                  "w+")
                             scriptHashFile.write(scriptHash)
                             print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
                         else:
                             print("You already have the latest version, or update script list.")
+                    break
     elif cmd == "-updatescriptlist":
         print("Updating scripts list...")
         scriptListFile = Path(scriptListDir)
