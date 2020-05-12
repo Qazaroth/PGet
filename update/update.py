@@ -93,26 +93,28 @@ if hashFileExists:
         print("There's a new update! Downloading...")
         hashFile = open(hashDir, "w+")
         hashFile.write(requests.get(upgrade_Hash_Location).content.decode("utf8"))
-        hashFile.close()
 
         pgetFile = open(md + "/pget.py", "w+")
         pgetFile.write(requests.get(pget_location).content.decode("utf8"))
-        pgetFile.close()
 
         readmeFile = open(md + "/README.md", "w+")
         readmeFile.write(requests.get(readme_location).content.decode("utf8"))
-        readmeFile.close()
 
         versionFile = open(binDir + "/version.txt", "w+")
-        versionFile.write(requests.get(readme_location).content.decode("utf8"))
-        versionFile.close()
+        versionFile.write(requests.get(version_location).content.decode("utf8"))
 
         updateFile = open(updateDir + "/update.py", "w+")
-        readmeFile.write(requests.get(readme_location).content.decode("utf8"))
-        readmeFile.close()
+        updateFile.write(requests.get(upgrade_Script_Location).content.decode("utf8"))
 
         downloadpyFile = open(binDir + "/download.py", "w+")
-        downloadpyFile.write(requests.get(readme_location).content.decode("utf8"))
+        downloadpyFile.write(requests.get(downloadpy_location).content.decode("utf8"))
+
+        hashFile.close()
+        pgetFile.close()
+        readmeFile.close()
+        versionFile.close()
+        updateFile.close()
         downloadpyFile.close()
+        print("Succesfully updated PGet!")
 else:
     print("Missing hash file. Please redownload from github!")
