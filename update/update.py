@@ -8,10 +8,9 @@ pget_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/pget.py"
 readme_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/README.md"
 
 mainDir = "././"
-binDir = "././bin"
-scriptsDir = "././scripts"
-updateDir = "././update"
-binDir = "././bin"
+binDir = mainDir + "bin"
+scriptsDir = mainDir + "scripts"
+updateDir = mainDir + "update"
 
 configDir = binDir + "/config.pget"
 hashDir = binDir + "/hash.txt"

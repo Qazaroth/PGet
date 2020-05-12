@@ -147,8 +147,6 @@ def main():
                 if not catDir.is_dir():
                     os.mkdir(catDir)
 
-                print(scriptDetails)
-
                 if inpScriptName == scriptName:
                     file_name = scriptURL.split("/")[-1]
                     dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
