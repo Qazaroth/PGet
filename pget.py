@@ -80,6 +80,7 @@ def main():
     print("-get \"SCRIPT_NAME\"")
     print("-delete \"SCRIPT_NAME\"")
     print("-updatescriptlist")
+    print("-list")
     print("-exit")
     print("---------------------------------------------------------------------------")
     cmdInputRaw = input("Command: ")
@@ -121,6 +122,31 @@ def main():
                         break
         else:
             print("Scripts list file missing, please do -updatescriptlist.")
+    elif cmd == "-list":
+        scriptListFile = Path(scriptListDir)
+
+        if scriptListFile.is_file():
+            print("Script Lists: ")
+
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
+            listFileContents = scriptListFileContent.split("--")
+            listFileContents.pop(0)
+
+            for i in listFileContents:
+                scriptNo = listFileContents.index(i)
+                scriptDetails = i.split(",")
+
+                scriptName = scriptDetails[1]
+                scriptDesc = scriptDetails[3]
+                scriptAuthor = scriptDetails[6]
+
+                print("{n} - {sn} by {a}: {d}".format(n=scriptNo,
+                                                      sn=scriptName,
+                                                      a=scriptAuthor,
+                                                     d=scriptDesc))
+        else:
+            print("Scripts list missing. Do -updatescriptlist .")
     elif cmd == "-get":
         argsArray = args.split("\"")
         inpScriptName = argsArray[1]
