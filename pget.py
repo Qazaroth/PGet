@@ -1,6 +1,5 @@
 from pathlib import Path
 from os import system, name
-from urllib import request
 
 from bin.download import Downloader
 from time import sleep
@@ -8,7 +7,7 @@ from time import sleep
 import os
 import shutil
 import sys
-# import urllib.request
+import requests
 
 binDir = "./bin"
 scriptsDir = "./scripts"
@@ -75,7 +74,7 @@ def init():
                 print("Checking to see if autoUpdate is enabled...")
                 if autoUpdate == 1:
                     print("AutoUpdate is enabled.Checking for new updates...")
-                    onlineHash = request.get(upgrade_Hash_Location).content.decode("utf8")
+                    onlineHash = requests.get(upgrade_Hash_Location).content.decode("utf8")
                     localHashFile = open(hashDir, "r+")
                     localHash = localHashFile.read()
 
@@ -203,11 +202,11 @@ def main():
 
                 tmpFile = open(tempDir + "/list.pgettmp", "w+")
 
-                tmpFile.write(request.get(script_List_Location).content.decode("utf8"))
+                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
             else:
                 os.mkdir(tempDir)
                 tmpFile = open(tempDir + "/list.pgettmp", "w+")
-                tmpFile.write(request.get(script_List_Location).content.decode("utf8"))
+                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
 
             print("Online Script Lists: ")
 
@@ -293,7 +292,7 @@ def main():
     elif cmd == "-updatescriptlist":
         print("Updating local scripts list...")
         scriptListFile = open(scriptListDir, "w+")
-        scriptListFile.write(request.get(script_List_Location).content.decode("utf8"))
+        scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
         scriptListFile.close()
         print("Updated local scripts list.")
     elif cmd == "-exit":

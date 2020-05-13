@@ -1,25 +1,6 @@
 from pathlib import Path
-import urllib.request
+
 import requests
-
-def downloadFile(url, dir):
-    file_name = url.split("/")[-1]
-    dir = "/{f}".format(f=file_name)
-
-    print("Downloading {scriptName}...".format(scriptName=file_name))
-
-    urllib.request.urlretrieve(url, dir)
-
-def downloadScript(url):
-    file_name = url.split("/")[-1]
-    dir = "./scripts/{f}".format(f=file_name)
-
-    print("Downloading {scriptName}...".format(scriptName=file_name))
-
-    urllib.request.urlretrieve(url, dir)
-
-def downloadScriptNoOutput(url, dir):
-    urllib.request.urlretrieve(url, dir)
 
 upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
 upgrade_Script_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/update/update.py"
@@ -27,6 +8,7 @@ pget_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/pget.py"
 readme_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/README.md"
 version_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/version.txt"
 downloadpy_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/download.py"
+
 
 mainDir = "./"
 mainDir2 = "../"

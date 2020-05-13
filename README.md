@@ -23,7 +23,7 @@ Get Python here: https://www.python.org/downloads/
 
 ## Introduction
 PGet is essentially just a python port for BGet, but now, it's BGet but for Python. It's a tool for handling Python
-scripts and files. It is built to help script writers and users alike to easily download, update and remvoe scripts.
+scripts and files. It is built to help script writers and users alike to easily download, update and remove scripts.
 
 ## Features
 1. Download scripts from the PGet server: The scripts are vetted and sorted by us. As of now, the selection are few but
@@ -35,6 +35,9 @@ command line!
 5. Update feature: PGet also updates itself or at least checks for new updates so that you are always up-to-date.
 
 ## Running PGet
+Before even running PGet, be sure to install `requests` package from pip.
+You can do so by typing: `pip install requests` in a command prompt or powershell or any terminal.
+
 For Windows Users: You can use the batch files provided <br>
 For Non-Windows Users: I'm not sure...
 
