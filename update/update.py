@@ -68,20 +68,15 @@ if hashFileExists:
 
     if whichDir == 1:
         md = mainDir
-        binDir = mainDir + "bin"
-        scriptsDir = mainDir + "scripts"
-        updateDir = mainDir + "update"
-
-        configDir = binDir + "/config.pget"
-        hashDir = binDir + "/hash.txt"
     elif whichDir == 2:
         md = mainDir2
-        binDir = mainDir2 + "bin"
-        scriptsDir = mainDir2 + "scripts"
-        updateDir = mainDir2 + "update"
 
-        configDir = binDir + "/config.pget"
-        hashDir = binDir + "/hash.txt"
+    binDir = md + "bin"
+    scriptsDir = md + "scripts"
+    updateDir = md + "update"
+
+    configDir = binDir + "/config.pget"
+    hashDir = binDir + "/hash.txt"
 
     onlineHash = requests.get(upgrade_Hash_Location).content.decode("utf8")
     localHashFile = open(hashDir, "r+")
@@ -110,6 +105,6 @@ if hashFileExists:
         tmpFile.write(requests.get(downloadpy_location).content.decode("utf8"))
 
         tmpFile.close()
-        print("Succesfully updated PGet!")
+        print("Successfully updated PGet!")
 else:
-    print("Missing hash file. Please redownload from github!")
+    print("Missing hash file. Please re-download from github!")
