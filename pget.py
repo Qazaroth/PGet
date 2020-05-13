@@ -77,7 +77,7 @@ def init():
                     localHashFile = open(hashDir, "r+")
                     localHash = localHashFile.read()
 
-                    if localHash != onlineHash:
+                    if localHash == onlineHash:
                         print("Your PGet is currently up-to-date. No updates needed.")
                     else:
                         print("There is a newer version on Github! Please run updater.bat...")
