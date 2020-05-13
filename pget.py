@@ -250,45 +250,81 @@ def main():
                 catDir = "./scripts/{c}".format(c=scriptCategory)
                 catDir = Path(catDir)
 
-                if not catDir.is_dir():
-                    os.mkdir(catDir)
+                if catDir.is_dir():
+                    if inpScriptName == scriptName:
+                        file_name = scriptURL.split("/")[-1]
+                        dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                        hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
 
-                if inpScriptName == scriptName:
-                    file_name = scriptURL.split("/")[-1]
-                    dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
-                    hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                    batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+                        scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
 
-                    scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+                        tmpFile = Path(scriptDir)
 
-                    tmpFile = Path(scriptDir)
-
-                    if not tmpFile.is_dir():
-                        print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
-                        os.mkdir(scriptDir)
-                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                        tmpFile = open(hashScriptDir, "w+")
-                        tmpFile.write(scriptHash)
-                        tmpFile = open(batScriptDir, "w+")
-                        tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
-                                                                                              a=scriptAuthor,
-                                                                                              f=file_name))
-                        print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
-                    else:
-                        print("{f} already exists... checking for update instead.".format(f=scriptName))
-                        tmpFile = open(hashScriptDir, "r")
-                        scriptOldHash = tmpFile.read()
-
-                        if scriptOldHash != scriptHash:
-                            print("Updating {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                        if not tmpFile.is_dir():
+                            print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                            os.mkdir(scriptDir)
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
                             tmpFile = open(hashScriptDir, "w+")
                             tmpFile.write(scriptHash)
-                            print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            tmpFile = open(batScriptDir, "w+")
+                            tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                                  a=scriptAuthor,
+                                                                                                  f=file_name))
+                            print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
                         else:
-                            print("You already have the latest version, or update script list.")
-                    tmpFile.close()
-                    break
+                            print("{f} already exists... checking for update instead.".format(f=scriptName))
+                            tmpFile = open(hashScriptDir, "r")
+                            scriptOldHash = tmpFile.read()
+
+                            if scriptOldHash != scriptHash:
+                                print("Updating {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                tmpFile = open(hashScriptDir, "w+")
+                                tmpFile.write(scriptHash)
+                                print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            else:
+                                print("You already have the latest version, or update script list.")
+                        tmpFile.close()
+                        break
+                else:
+                    if inpScriptName == scriptName:
+                        os.mkdir(catDir)
+                        file_name = scriptURL.split("/")[-1]
+                        dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                        hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+
+                        scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+
+                        tmpFile = Path(scriptDir)
+
+                        if not tmpFile.is_dir():
+                            print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                            os.mkdir(scriptDir)
+                            Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                            tmpFile = open(hashScriptDir, "w+")
+                            tmpFile.write(scriptHash)
+                            tmpFile = open(batScriptDir, "w+")
+                            tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                                  a=scriptAuthor,
+                                                                                                  f=file_name))
+                            print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                        else:
+                            print("{f} already exists... checking for update instead.".format(f=scriptName))
+                            tmpFile = open(hashScriptDir, "r")
+                            scriptOldHash = tmpFile.read()
+
+                            if scriptOldHash != scriptHash:
+                                print("Updating {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                tmpFile = open(hashScriptDir, "w+")
+                                tmpFile.write(scriptHash)
+                                print("Updated {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            else:
+                                print("You already have the latest version, or update script list.")
+                        tmpFile.close()
+                        break
             scriptListFile.close()
         else:
             print("Local script lists missing... Do -updatescriptlist .")
