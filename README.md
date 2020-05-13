@@ -6,7 +6,7 @@ files either through the batch files provided or your own command prompt.
 **PIP is required for this to work. It will be pre-installed when you install the latest version of Python.**
 
 
-Python Version Used: **3.8**
+Python Version Used: **3.8.2**
 
 Get Python here: https://www.python.org/downloads/
 
