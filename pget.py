@@ -84,7 +84,7 @@ def init():
                 else:
                     print("AutoUpdate is disabled.")
             except ValueError:
-                print("An error occured while attempting to read config.pget... Please delete the file and restart "
+                print("An error occurred while attempting to read config.pget... Please delete the file and restart "
                       "PGet.")
     else:
         print("Please redownload PGet from Github...")
