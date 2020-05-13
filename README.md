@@ -48,8 +48,14 @@ For Non-Windows Users: I'm not sure...
 Here's an example:
 
 Fetching a script named `test` from the server. The easiest way to do this would be:
-1. Start pget.py
-2. Type in `-get "test"`
+1. Start **pget.py** or **pget.bat**:
+    - If starting **pget.py**:
+        - Open Command prompt, navigate to PGet folder.
+        - Type: `python pget.py`
+    - If starting **pget.bat**, just double click it and start it like how you start any other applications.
+
+2. Once PGet is running, type in `-get "test"` (The quotation marks are compulsory for fetching scripts and a few other 
+commands)
 
 ## Bugs and Fixes:
 If it says that there is no new update while there clearly is, you can navigate to bin/hash.txt and change the value
