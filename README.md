@@ -1,6 +1,10 @@
 # PGet
 Python port for [BGet](https://github.com/jahwi/bget), at least that was the main idea... You can run the
 files either through the batch files provided or your own command prompt.
+<br>
+
+**PIP is required for this to work. It will be pre-installed when you install the latest version of Python.**
+
 
 Python Version Used: **3.8**
 
