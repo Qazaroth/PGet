@@ -21,6 +21,8 @@ updateBat = "updater.bat"
 upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
 script_List_Location = "https://raw.githubusercontent.com/Qazaroth/pget-list/master/master.txt"
 
+canRun = False
+
 
 def clear():
     if name == "nt":
@@ -35,6 +37,7 @@ def init():
 
     print("Checking if hash file exists...")
     if hashFile.is_file():
+        canRun = True
         print("Hash file exists.")
 
         scriptDir = Path(scriptsDir)
@@ -447,4 +450,5 @@ def main():
 
 init()
 sleep(2)
-main()
+if canRun:
+    main()
