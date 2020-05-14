@@ -94,12 +94,12 @@ def main():
     clear()
     print("---------------------------------------------------------------------------")
     print("Usage: -command {args}")
-    print("-get \"SCRIPT_NAME\"")
-    print("-update {\"SCRIPT_NAME\"|\"all\"}")
-    print("-delete {\"SCRIPT_NAME\"|\"all\"}")
-    print("-updatescriptlist")
-    print("-list {local|online}")
-    print("-exit")
+    print("\033[1m-get\033[m \033[31m\"SCRIPT_NAME\"\033[m")
+    print("\033[1m-update\033[m \033[31m{\"SCRIPT_NAME\"\033[m|\033[31m\"all\"}\033[m")
+    print("\033[1m-delete\033[m \033[31m{\"SCRIPT_NAME\"\033[m|\033[31m\"all\"}\033[m")
+    print("\033[1m-updatescriptlist\033[m")
+    print("\033[1m-list\033[m \033[31m{local\033[m|\033[31monline}\033[m")
+    print("\033[1m-exit\033[m")
     print("---------------------------------------------------------------------------")
     cmdInputRaw = input("Command: ")
     cmdInput = cmdInputRaw.split()
@@ -193,7 +193,7 @@ def main():
                           .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
                 scriptListFile.close()
             else:
-                print("Local cripts list missing. Do -updatescriptlist .")
+                print("Local scripts list missing. Do -updatescriptlist .")
         elif serverChosen == 1:
             tmpFile = Path(tempDir)
 
@@ -379,7 +379,9 @@ def main():
                         tmpFile = Path(scriptDir)
 
                         if not tmpFile.is_dir():
-                            print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                            print("Downloading \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m]...".format(f=file_name,
+                                                                                                         a=scriptAuthor)
+                                  )
                             os.mkdir(scriptDir)
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
                             tmpFile = open(hashScriptDir, "w+")
@@ -388,9 +390,10 @@ def main():
                             tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
-                            print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            print("Downloaded \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m].".format(f=file_name,
+                                                                                                      a=scriptAuthor))
                         else:
-                            print("{f} already exists..".format(f=scriptName))
+                            print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
                         tmpFile.close()
                         break
                 else:
@@ -406,7 +409,9 @@ def main():
                         tmpFile = Path(scriptDir)
 
                         if not tmpFile.is_dir():
-                            print("Downloading {f} by {a}...".format(f=file_name, a=scriptAuthor))
+                            print("Downloading \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m]...".format(f=file_name,
+                                                                                                         a=scriptAuthor)
+                                  )
                             os.mkdir(scriptDir)
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
                             tmpFile = open(hashScriptDir, "w+")
@@ -415,9 +420,10 @@ def main():
                             tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
-                            print("Downloaded {f} by {a}.".format(f=file_name, a=scriptAuthor))
+                            print("Downloaded \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m].".format(f=file_name,
+                                                                                                      a=scriptAuthor))
                         else:
-                            print("{f} already exists...".format(f=scriptName))
+                            print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
                         tmpFile.close()
                         break
             scriptListFile.close()
