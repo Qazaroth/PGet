@@ -379,7 +379,7 @@ def main():
                         tmpFile = Path(scriptDir)
 
                         if not tmpFile.is_dir():
-                            print("Downloading \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m]...".format(f=file_name,
+                            print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
                                                                                                          a=scriptAuthor)
                                   )
                             os.mkdir(scriptDir)
@@ -390,11 +390,11 @@ def main():
                             tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
-                            print("Downloaded \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m].".format(f=file_name,
+                            print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
                                                                                                       a=scriptAuthor))
+                            tmpFile.close()
                         else:
                             print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
-                        tmpFile.close()
                         break
                 else:
                     if inpScriptName == scriptName:
@@ -409,7 +409,7 @@ def main():
                         tmpFile = Path(scriptDir)
 
                         if not tmpFile.is_dir():
-                            print("Downloading \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m]...".format(f=file_name,
+                            print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
                                                                                                          a=scriptAuthor)
                                   )
                             os.mkdir(scriptDir)
@@ -420,8 +420,9 @@ def main():
                             tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
-                            print("Downloaded \033[1;2;32m{f}\033[m] by \033[1;37m{a}\033[m].".format(f=file_name,
+                            print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
                                                                                                       a=scriptAuthor))
+                            tmpFile.close()
                         else:
                             print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
                         tmpFile.close()

@@ -5,6 +5,8 @@ https://github.com/Qazaroth/PGet
 
 Changelogs:
 
+
+v2.0.1  [14-MAY-2020]               Fixed an error, causing application to crash.
 v2.0.0  [14-MAY-2020]               Fixed some typo and added more colours
         [14-MAY-2020]               Added update command.
         [14-MAY-2020]               You now need to run it to update scripts.
