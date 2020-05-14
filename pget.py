@@ -37,6 +37,7 @@ def init():
 
     print("Checking if hash file exists...")
     if hashFile.is_file():
+        global canRun
         canRun = True
         print("Hash file exists.")
 
