@@ -130,7 +130,7 @@ def main():
                     scriptDesc = scriptDetails[3]
                     scriptAuthor = scriptDetails[6]
 
-                    print('\033[1m{n} - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
+                    print('\033[1m[{n}] - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
                           .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
                 scriptListFile.close()
             else:
@@ -168,7 +168,7 @@ def main():
                 scriptDesc = scriptDetails[3]
                 scriptAuthor = scriptDetails[6]
 
-                print('\033[1m{n} - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
+                print('\033[1m[{n}] - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
                       .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
             tmpFile.close()
             os.remove(tempDir + "/list.pgettmp")
