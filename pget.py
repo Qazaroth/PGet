@@ -31,69 +31,6 @@ def clear():
         system('clear')
 
 
-def init():
-    clear()
-    hashFile = Path(hashDir)
-
-    print("Checking if hash file exists...")
-    if hashFile.is_file():
-        global canRun
-        canRun = True
-        print("Hash file exists.")
-
-        scriptDir = Path(scriptsDir)
-
-        if not scriptDir.is_dir():
-            os.mkdir(scriptsDir)
-
-        scriptListFile = Path(scriptListDir)
-
-        if not scriptListFile.is_file():
-            scriptListFile = open(scriptListDir, "w+")
-            scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
-
-        tmpDir = Path(tempDir)
-
-        if not tmpDir.is_dir():
-            os.mkdir(tempDir)
-
-        print("Checking if config.pget exists...")
-        configFile = Path(configDir)
-
-        if not configFile.is_file():
-            print("config.pget does not exist... making one...")
-            configFile = open(configDir, "w+")
-            configFile.write("[DO NOT DELETE]\n")
-            configFile.write("autoUpdate=0")
-            print("Made config.pget. Do not delete this file!")
-        else:
-            print("config.pget exist! Do not delete this file!")
-            configFile = open(configDir, "r")
-            configs = configFile.read().splitlines()
-
-            try:
-                autoUpdate = int(configs[1][11:])
-
-                print("Checking to see if autoUpdate is enabled...")
-                if autoUpdate == 1:
-                    print("AutoUpdate is enabled.Checking for new updates...")
-                    onlineHash = requests.get(upgrade_Hash_Location).content.decode("utf8")
-                    localHashFile = open(hashDir, "r+")
-                    localHash = localHashFile.read()
-
-                    if localHash == onlineHash:
-                        print("Your PGet is currently up-to-date. No updates needed.")
-                    else:
-                        print("There is a newer version on Github! Please run updater.bat...")
-                else:
-                    print("AutoUpdate is disabled.")
-            except ValueError:
-                print("An error occurred while attempting to read config.pget... Please delete the file and restart "
-                      "PGet.")
-    else:
-        print("Please redownload PGet from Github...")
-
-
 def main():
     clear()
     print("---------------------------------------------------------------------------")
@@ -449,7 +386,68 @@ def main():
     main()
 
 
+def init():
+    clear()
+    hashFile = Path(hashDir)
+
+    print("Checking if hash file exists...")
+    if hashFile.is_file():
+        print("Hash file exists.")
+
+        scriptDir = Path(scriptsDir)
+
+        if not scriptDir.is_dir():
+            os.mkdir(scriptsDir)
+
+        scriptListFile = Path(scriptListDir)
+
+        if not scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "w+")
+            scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+
+        tmpDir = Path(tempDir)
+
+        if not tmpDir.is_dir():
+            os.mkdir(tempDir)
+
+        print("Checking if config.pget exists...")
+        configFile = Path(configDir)
+
+        if not configFile.is_file():
+            print("config.pget does not exist... making one...")
+            configFile = open(configDir, "w+")
+            configFile.write("[DO NOT DELETE]\n")
+            configFile.write("autoUpdate=0")
+            print("Made config.pget. Do not delete this file!")
+        else:
+            print("config.pget exist! Do not delete this file!")
+            configFile = open(configDir, "r")
+            configs = configFile.read().splitlines()
+
+            try:
+                autoUpdate = int(configs[1][11:])
+
+                print("Checking to see if autoUpdate is enabled...")
+                if autoUpdate == 1:
+                    print("AutoUpdate is enabled.Checking for new updates...")
+                    onlineHash = requests.get(upgrade_Hash_Location).content.decode("utf8")
+                    localHashFile = open(hashDir, "r+")
+                    localHash = localHashFile.read()
+
+                    if localHash == onlineHash:
+                        print("Your PGet is currently up-to-date. No updates needed.")
+                    else:
+                        print("There is a newer version on Github! Please run updater.bat...")
+                else:
+                    print("AutoUpdate is disabled.")
+            except ValueError:
+                print("An error occurred while attempting to read config.pget... Please delete the file and restart "
+                      "PGet.")
+
+            sleep(2)
+            main()
+    else:
+        print("Please redownload PGet from Github...")
+
+
 init()
-sleep(2)
-if canRun:
-    main()
