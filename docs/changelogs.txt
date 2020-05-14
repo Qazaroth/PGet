@@ -1,0 +1,12 @@
+PGet
+Made by Qazaroth in 2020
+https://github.com/Qazaroth/PGet
+
+
+Changelogs:
+
+v2.0.0 [14-MAY-2020]                Added update command.
+                                        You now need to run it to update scripts.
+                                    Made the program more user friendly by adding colours.
+                                    Added changelogs.txt
+Anything earlier than v2.0.0        Only god knows what happened before...
