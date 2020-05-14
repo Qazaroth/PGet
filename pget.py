@@ -21,8 +21,6 @@ updateBat = "updater.bat"
 upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
 script_List_Location = "https://raw.githubusercontent.com/Qazaroth/pget-list/master/master.txt"
 
-canRun = False
-
 
 def clear():
     if name == "nt":
@@ -387,6 +385,7 @@ def main():
 
 
 def init():
+    canRun = False
     clear()
     hashFile = Path(hashDir)
 
@@ -419,6 +418,7 @@ def init():
             configFile.write("[DO NOT DELETE]\n")
             configFile.write("autoUpdate=0")
             print("Made config.pget. Do not delete this file!")
+            canRun = True
         else:
             print("config.pget exist! Do not delete this file!")
             configFile = open(configDir, "r")
@@ -443,8 +443,11 @@ def init():
             except ValueError:
                 print("An error occurred while attempting to read config.pget... Please delete the file and restart "
                       "PGet.")
+            canRun = True
 
-            sleep(2)
+        sleep(2)
+
+        if canRun:
             main()
     else:
         print("Please redownload PGet from Github...")
