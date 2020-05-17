@@ -1,6 +1,7 @@
 scripts/
 list/
 hget.bat
+library/__pycache__
 bin/__pycache__
 bin/hashgenerator.py
 bin/config.pget
