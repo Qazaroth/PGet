@@ -1,6 +1,14 @@
 from pathlib import Path
 
+import sys
+import os
 import requests
+
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
+
+from library.download import Downloader
 
 upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
 upgrade_Script_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/update/update.py"
@@ -8,7 +16,6 @@ pget_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/pget.py"
 readme_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/README.md"
 version_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/version.txt"
 downloadpy_location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/download.py"
-
 
 mainDir = "./"
 mainDir2 = "../"
@@ -67,26 +74,16 @@ if hashFileExists:
     if localHash == onlineHash:
         print("There are currently no new updates.")
     else:
+        localHashFile.close()
         print("There's a new update! Downloading...")
-        tmpFile = open(hashDir, "w+")
-        tmpFile.write(requests.get(upgrade_Hash_Location).content.decode("utf8"))
 
-        tmpFile = open(md + "/pget.py", "w+")
-        tmpFile.write(requests.get(pget_location).content.decode("utf8"))
+        Downloader.downloadScriptNoOutput(Downloader, upgrade_Hash_Location, hashDir)
+        Downloader.downloadScriptNoOutput(Downloader, pget_location, md + "/pget.py")
+        Downloader.downloadScriptNoOutput(Downloader, readme_location, md + "/README.md")
+        Downloader.downloadScriptNoOutput(Downloader, version_location, binDir + "/version.txt")
+        Downloader.downloadScriptNoOutput(Downloader, upgrade_Script_Location, updateDir + "/update.py")
+        Downloader.downloadScriptNoOutput(Downloader, downloadpy_location, binDir + "/download.py")
 
-        tmpFile = open(md + "/README.md", "w+")
-        tmpFile.write(requests.get(readme_location).content.decode("utf8"))
-
-        tmpFile = open(binDir + "/version.txt", "w+")
-        tmpFile.write(requests.get(version_location).content.decode("utf8"))
-
-        tmpFile = open(updateDir + "/update.py", "w+")
-        tmpFile.write(requests.get(upgrade_Script_Location).content.decode("utf8"))
-
-        tmpFile = open(binDir + "/download.py", "w+")
-        tmpFile.write(requests.get(downloadpy_location).content.decode("utf8"))
-
-        tmpFile.close()
         print("Successfully updated PGet!")
 else:
     print("Missing hash file. Please re-download from github!")
