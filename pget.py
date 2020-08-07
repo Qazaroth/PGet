@@ -29,133 +29,81 @@ def clear():
         system('clear')
 
 
-def main():
-    clear()
-    print("---------------------------------------------------------------------------")
-    print("Usage: -command {args}")
-    print("\033[1m-get\033[m \033[31m\"SCRIPT_NAME\"\033[m")
-    print("\033[1m-update\033[m {\033[31m\"SCRIPT_NAME\"\033[m|\033[31m\"all\"\033[m}")
-    print("\033[1m-delete\033[m {\033[31m\"SCRIPT_NAME\"\033[m|\033[31m\"all\"\033[m}")
-    print("\033[1m-updatescriptlist\033[m")
-    print("\033[1m-list\033[m {\033[31mlocal\033[m|\033[31monline\033[m}")
-    print("\033[1m-exit\033[m")
-    print("---------------------------------------------------------------------------")
-    cmdInputRaw = input("Command: ")
-    cmdInput = cmdInputRaw.split()
-    cmd = cmdInput[0].lower()
-    args = cmdInputRaw[cmd.__len__()::].strip() or None
+def delete(args):
+    argsArray = args.split("\"")
+    inpScriptName = argsArray[1]
 
-    if cmd == "-delete":
+    if inpScriptName.lower() == "all":
+        print("Deleting everything in scripts folder.")
+        for i in os.listdir(scriptsDir):
+            deleteThisDir = scriptsDir + "/" + i
+            try:
+                shutil.rmtree(deleteThisDir)
+            except NotADirectoryError:
+                os.remove(deleteThisDir)
+        print("Deleted everything in scripts folder.")
+    else:
+        print("Checking if script {s} exists...".format(s=inpScriptName))
+        scriptListFile = Path(scriptListDir)
+
+        if scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
+            listFileContents = scriptListFileContent.split("--")
+            listFileContents.pop(0)
+
+            for i in listFileContents:
+                scriptDetails = i.split(",")
+                scriptName = scriptDetails[1]
+                scriptCategory = scriptDetails[7]
+
+                if inpScriptName == scriptName:
+                    print("{f} script exists in database, now checking if it's downloaded locally...".format(
+                        f=scriptName
+                    ))
+                    scriptDirS = "./scripts/{c}/{s}".format(c=scriptCategory, s=scriptName)
+                    scriptDir = Path(scriptDirS)
+
+                    if scriptDir.is_dir():
+                        print("Script {f} is downloaded locally, deleting...".format(f=scriptName))
+                        shutil.rmtree(scriptDirS)
+                        print("Deleted {f}.".format(f=scriptName))
+                        break
+            scriptListFile.close()
+        else:
+            print("Scripts list file missing, please do -updatescriptlist.")
+
+
+def list(args):
+    # 0 - Local, 1 - Online
+    serverChosen = 0
+    if args is not None:
         argsArray = args.split("\"")
-        inpScriptName = argsArray[1]
+        server = argsArray[0].lower()
 
-        if inpScriptName.lower() == "all":
-            print("Deleting everything in scripts folder.")
-            for i in os.listdir(scriptsDir):
-                deleteThisDir = scriptsDir + "/" + i
-                try:
-                    shutil.rmtree(deleteThisDir)
-                except NotADirectoryError:
-                    os.remove(deleteThisDir)
-            print("Deleted everything in scripts folder.")
+        if server == "online":
+            serverChosen = 1
+            print("Online scripts list chosen.")
+        elif server == "local":
+            serverChosen = 0
+            print("Local scripts list chosen.")
         else:
-            print("Checking if script {s} exists...".format(s=inpScriptName))
-            scriptListFile = Path(scriptListDir)
+            serverChosen = 0
+            print("Unknown server specified. Defaulting to local...")
+    else:
+        print("No server specified, defaulting to local.")
 
-            if scriptListFile.is_file():
-                scriptListFile = open(scriptListDir, "r")
-                scriptListFileContent = scriptListFile.read()
-                listFileContents = scriptListFileContent.split("--")
-                listFileContents.pop(0)
+    if serverChosen == 0:
+        scriptListFile = Path(scriptListDir)
+        if scriptListFile.is_file():
+            print("Local Script Lists: ")
+            print("Format:\n\033[1m[#] - \033[1;2;32m[SCRIPT_NAME]\033[m by \033[1;37m[AUTHOR]\033[m: \033[1m["
+                  "DESCRIPTION]\033[m")
 
-                for i in listFileContents:
-                    scriptDetails = i.split(",")
-                    scriptName = scriptDetails[1]
-                    scriptCategory = scriptDetails[7]
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
 
-                    if inpScriptName == scriptName:
-                        print("{f} script exists in database, now checking if it's downloaded locally...".format(
-                            f=scriptName
-                        ))
-                        scriptDirS = "./scripts/{c}/{s}".format(c=scriptCategory, s=scriptName)
-                        scriptDir = Path(scriptDirS)
-
-                        if scriptDir.is_dir():
-                            print("Script {f} is downloaded locally, deleting...".format(f=scriptName))
-                            shutil.rmtree(scriptDirS)
-                            print("Deleted {f}.".format(f=scriptName))
-                            break
-                scriptListFile.close()
-            else:
-                print("Scripts list file missing, please do -updatescriptlist.")
-    elif cmd == "-list":
-        # 0 - Local, 1 - Online
-        serverChosen = 0
-        if args is not None:
-            argsArray = args.split("\"")
-            server = argsArray[0].lower()
-
-            if server == "online":
-                serverChosen = 1
-                print("Online scripts list chosen.")
-            elif server == "local":
-                serverChosen = 0
-                print("Local scripts list chosen.")
-            else:
-                serverChosen = 0
-                print("Unknown server specified. Defaulting to local...")
-        else:
-            print("No server specified, defaulting to local.")
-
-        if serverChosen == 0:
-            scriptListFile = Path(scriptListDir)
-            if scriptListFile.is_file():
-                print("Local Script Lists: ")
-                print("Format:\n\033[1m[#] - \033[1;2;32m[SCRIPT_NAME]\033[m by \033[1;37m[AUTHOR]\033[m: \033[1m["
-                      "DESCRIPTION]\033[m")
-
-                scriptListFile = open(scriptListDir, "r")
-                scriptListFileContent = scriptListFile.read()
-
-                listFileContents = scriptListFileContent.split("--")
-                listFileContents.pop(0)
-
-                for i in listFileContents:
-                    scriptNo = listFileContents.index(i)
-                    scriptDetails = i.split(",")
-
-                    scriptName = scriptDetails[1]
-                    scriptDesc = scriptDetails[3]
-                    scriptAuthor = scriptDetails[6]
-
-                    print('\033[1m[{n}] - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
-                          .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
-                scriptListFile.close()
-            else:
-                print("Local scripts list missing. Do -updatescriptlist .")
-        elif serverChosen == 1:
-            tmpFile = Path(tempDir)
-
-            if tmpFile.is_dir():
-                tmpFile = Path(tempDir + "/list.pgettmp")
-
-                if tmpFile.is_file():
-                    os.remove(tempDir + "/list.pgettmp")
-
-                tmpFile = open(tempDir + "/list.pgettmp", "w+")
-
-                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
-            else:
-                os.mkdir(tempDir)
-                tmpFile = open(tempDir + "/list.pgettmp", "w+")
-                tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
-
-            print("Online Script Lists: ")
-
-            tmpFile = open(tempDir + "/list.pgettmp", "r")
-            tmpFileContent = tmpFile.read()
-
-            listFileContents = tmpFileContent.split("--")
+            listFileContents = scriptListFileContent.split("--")
             listFileContents.pop(0)
 
             for i in listFileContents:
@@ -168,134 +116,116 @@ def main():
 
                 print('\033[1m[{n}] - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
                       .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
-            tmpFile.close()
-            os.remove(tempDir + "/list.pgettmp")
-    elif cmd == "-update":
-        argsArray = args.split("\"")
-        inpScriptName = argsArray[1]
-
-        scriptListFile = Path(scriptListDir)
-
-        if inpScriptName.lower() == "all":
-            print("Please wait...")
-            if scriptListFile.is_file():
-                scriptListFile = open(scriptListDir, "r")
-                scriptListFileContent = scriptListFile.read()
-                listFileContent = scriptListFileContent.split("--")
-                listFileContent.pop(0)
-
-                for i in listFileContent:
-                    scriptDetails = i.split(",")
-                    scriptName = scriptDetails[1]
-                    scriptURL = scriptDetails[2]
-                    scriptHash = scriptDetails[5]
-                    scriptAuthor = scriptDetails[6]
-                    scriptCategory = scriptDetails[7]
-
-                    catDir = "./scripts/{c}".format(c=scriptCategory)
-                    catDir = Path(catDir)
-
-                    if catDir.is_dir():
-                        file_name = scriptURL.split("/")[-1]
-                        dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
-                        hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
-                                                                          f=scriptName)
-
-                        scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
-                        scriptHashDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-
-                        tmpFile = Path(scriptDir)
-
-                        if tmpFile.is_dir():
-                            print("Script \033[1m{f}\033[m exists... Checking for updates...".format(f=scriptName))
-                            tmpFile = Path(scriptHashDir)
-
-                            if tmpFile.is_file():
-                                tmpFile = open(scriptHashDir, "r")
-
-                                localHashFile = tmpFile.read()
-
-                                if localHashFile == scriptHash:
-                                    print("There is either no new update for \033[1m{f}\033[m or your script list is "
-                                          "not updated.".format(f=scriptName))
-                                else:
-                                    print("There is a new update! Updating {f}...".format(f=scriptName))
-                                    Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                                    tmpFile = open(hashScriptDir, "w+")
-                                    tmpFile.write(scriptHash)
-                                    tmpFile = open(batScriptDir, "w+")
-                                    tmpFile.write(
-                                        "@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
-                                                                                                a=scriptAuthor,
-                                                                                                f=file_name))
-                                    print("Updated \033[1m{f}\033[m.".format(f=file_name, a=scriptAuthor))
+            scriptListFile.close()
         else:
-            if scriptListFile.is_file():
-                scriptListFile = open(scriptListDir, "r")
-                scriptListFileContent = scriptListFile.read()
-                listFileContent = scriptListFileContent.split("--")
-                listFileContent.pop(0)
+            print("Local scripts list missing. Do -updatescriptlist .")
+    elif serverChosen == 1:
+        tmpFile = Path(tempDir)
 
-                for i in listFileContent:
-                    scriptDetails = i.split(",")
-                    scriptName = scriptDetails[1]
-                    scriptURL = scriptDetails[2]
-                    scriptHash = scriptDetails[5]
-                    scriptAuthor = scriptDetails[6]
-                    scriptCategory = scriptDetails[7]
+        if tmpFile.is_dir():
+            tmpFile = Path(tempDir + "/list.pgettmp")
 
-                    catDir = "./scripts/{c}".format(c=scriptCategory)
-                    catDir = Path(catDir)
+            if tmpFile.is_file():
+                os.remove(tempDir + "/list.pgettmp")
 
-                    if catDir.is_dir():
-                        if inpScriptName == scriptName:
-                            file_name = scriptURL.split("/")[-1]
-                            dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
-                            hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                            batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
-                                                                              f=scriptName)
+            tmpFile = open(tempDir + "/list.pgettmp", "w+")
 
-                            scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
-                            scriptHashDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+            tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
+        else:
+            os.mkdir(tempDir)
+            tmpFile = open(tempDir + "/list.pgettmp", "w+")
+            tmpFile.write(requests.get(script_List_Location).content.decode("utf8"))
 
-                            tmpFile = Path(scriptDir)
+        print("Online Script Lists: ")
 
-                            if tmpFile.is_dir():
-                                print("File exists... Checking for updates...")
-                                tmpFile = Path(scriptHashDir)
+        tmpFile = open(tempDir + "/list.pgettmp", "r")
+        tmpFileContent = tmpFile.read()
 
-                                if tmpFile.is_file():
-                                    tmpFile = open(scriptHashDir, "r")
+        listFileContents = tmpFileContent.split("--")
+        listFileContents.pop(0)
 
-                                    localHashFile = tmpFile.read()
+        for i in listFileContents:
+            scriptNo = listFileContents.index(i)
+            scriptDetails = i.split(",")
 
-                                    if localHashFile == scriptHash:
-                                        print("There is either no new update or your script list is not updated.")
-                                    else:
-                                        print("There is a new update! Updating {f}...".format(f=scriptName))
-                                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                                        tmpFile = open(hashScriptDir, "w+")
-                                        tmpFile.write(scriptHash)
-                                        tmpFile = open(batScriptDir, "w+")
-                                        tmpFile.write(
-                                            "@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
-                                                                                                    a=scriptAuthor,
-                                                                                                    f=file_name))
-                                        print("Updated {f}.".format(f=file_name, a=scriptAuthor))
-    elif cmd == "-get":
-        argsArray = args.split("\"")
-        inpScriptName = argsArray[1]
+            scriptName = scriptDetails[1]
+            scriptDesc = scriptDetails[3]
+            scriptAuthor = scriptDetails[6]
 
-        scriptListFile = Path(scriptListDir)
+            print('\033[1m[{n}] - \033[1;2;32m{sn}\033[m by \033[1;37m{a}\033[m : \033[1m{d}\033[m'
+                  .format(n=scriptNo, sn=scriptName, a=scriptAuthor, d=scriptDesc))
+        tmpFile.close()
+        os.remove(tempDir + "/list.pgettmp")
 
+
+def update(args):
+    argsArray = args.split("\"")
+    inpScriptName = argsArray[1]
+
+    scriptListFile = Path(scriptListDir)
+
+    if inpScriptName.lower() == "all":
+        print("Please wait...")
         if scriptListFile.is_file():
             scriptListFile = open(scriptListDir, "r")
             scriptListFileContent = scriptListFile.read()
-            listFileContents = scriptListFileContent.split("--")
-            listFileContents.pop(0)
+            listFileContent = scriptListFileContent.split("--")
+            listFileContent.pop(0)
 
-            for i in listFileContents:
+            for i in listFileContent:
+                scriptDetails = i.split(",")
+                scriptName = scriptDetails[1]
+                scriptURL = scriptDetails[2]
+                scriptHash = scriptDetails[5]
+                scriptAuthor = scriptDetails[6]
+                scriptCategory = scriptDetails[7]
+
+                catDir = "./scripts/{c}".format(c=scriptCategory)
+                catDir = Path(catDir)
+
+                if catDir.is_dir():
+                    file_name = scriptURL.split("/")[-1]
+                    dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                    hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                    batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
+                                                                      f=scriptName)
+
+                    scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+                    scriptHashDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+
+                    tmpFile = Path(scriptDir)
+
+                    if tmpFile.is_dir():
+                        print("Script \033[1m{f}\033[m exists... Checking for updates...".format(f=scriptName))
+                        tmpFile = Path(scriptHashDir)
+
+                        if tmpFile.is_file():
+                            tmpFile = open(scriptHashDir, "r")
+
+                            localHashFile = tmpFile.read()
+
+                            if localHashFile == scriptHash:
+                                print("There is either no new update for \033[1m{f}\033[m or your script list is "
+                                      "not updated.".format(f=scriptName))
+                            else:
+                                print("There is a new update! Updating {f}...".format(f=scriptName))
+                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                tmpFile = open(hashScriptDir, "w+")
+                                tmpFile.write(scriptHash)
+                                tmpFile = open(batScriptDir, "w+")
+                                tmpFile.write(
+                                    "@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                            a=scriptAuthor,
+                                                                                            f=file_name))
+                                print("Updated \033[1m{f}\033[m.".format(f=file_name, a=scriptAuthor))
+    else:
+        if scriptListFile.is_file():
+            scriptListFile = open(scriptListDir, "r")
+            scriptListFileContent = scriptListFile.read()
+            listFileContent = scriptListFileContent.split("--")
+            listFileContent.pop(0)
+
+            for i in listFileContent:
                 scriptDetails = i.split(",")
                 scriptName = scriptDetails[1]
                 scriptURL = scriptDetails[2]
@@ -311,16 +241,161 @@ def main():
                         file_name = scriptURL.split("/")[-1]
                         dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
                         hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
+                                                                          f=scriptName)
+
+                        scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+                        scriptHashDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+
+                        tmpFile = Path(scriptDir)
+
+                        if tmpFile.is_dir():
+                            print("File exists... Checking for updates...")
+                            tmpFile = Path(scriptHashDir)
+
+                            if tmpFile.is_file():
+                                tmpFile = open(scriptHashDir, "r")
+
+                                localHashFile = tmpFile.read()
+
+                                if localHashFile == scriptHash:
+                                    print("There is either no new update or your script list is not updated.")
+                                else:
+                                    print("There is a new update! Updating {f}...".format(f=scriptName))
+                                    Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                    tmpFile = open(hashScriptDir, "w+")
+                                    tmpFile.write(scriptHash)
+                                    tmpFile = open(batScriptDir, "w+")
+                                    tmpFile.write(
+                                        "@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                                a=scriptAuthor,
+                                                                                                f=file_name))
+                                    print("Updated {f}.".format(f=file_name, a=scriptAuthor))
+
+
+def get(args):
+    argsArray = args.split("\"")
+    inpScriptName = argsArray[1]
+
+    scriptListFile = Path(scriptListDir)
+
+    if scriptListFile.is_file():
+        scriptListFile = open(scriptListDir, "r")
+        scriptListFileContent = scriptListFile.read()
+        listFileContents = scriptListFileContent.split("--")
+        listFileContents.pop(0)
+
+        for i in listFileContents:
+            scriptDetails = i.split(",")
+            scriptName = scriptDetails[1]
+            scriptURL = scriptDetails[2]
+            scriptHash = scriptDetails[5]
+            scriptAuthor = scriptDetails[6]
+            scriptCategory = scriptDetails[7]
+
+            catDir = "./scripts/{c}".format(c=scriptCategory)
+            catDir = Path(catDir)
+
+            if catDir.is_dir():
+                if inpScriptName == scriptName:
+                    file_name = scriptURL.split("/")[-1]
+                    dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                    hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                    batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+
+                    scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+
+                    tmpFile = Path(scriptDir)
+
+                    if not tmpFile.is_dir():
+                        print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
+                                                                                                   a=scriptAuthor)
+                              )
+                        os.mkdir(scriptDir)
+                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                        tmpFile = open(hashScriptDir, "w+")
+                        tmpFile.write(scriptHash)
+                        tmpFile = open(batScriptDir, "w+")
+                        tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                              a=scriptAuthor,
+                                                                                              f=file_name))
+                        print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
+                                                                                                a=scriptAuthor))
+                        tmpFile.close()
+                    else:
+                        print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
+                    break
+            else:
+                if inpScriptName == scriptName:
+                    os.mkdir(catDir)
+                    file_name = scriptURL.split("/")[-1]
+                    dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                    hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                    batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+
+                    scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
+
+                    tmpFile = Path(scriptDir)
+
+                    if not tmpFile.is_dir():
+                        print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
+                                                                                                   a=scriptAuthor)
+                              )
+                        os.mkdir(scriptDir)
+                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                        tmpFile = open(hashScriptDir, "w+")
+                        tmpFile.write(scriptHash)
+                        tmpFile = open(batScriptDir, "w+")
+                        tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
+                                                                                              a=scriptAuthor,
+                                                                                              f=file_name))
+                        print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
+                                                                                                a=scriptAuthor))
+                        tmpFile.close()
+                    else:
+                        print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
+                    tmpFile.close()
+                    break
+        scriptListFile.close()
+    else:
+        tmpFileContent = requests.get(script_List_Location).content.decode("utf8")
+
+        tmpFileContentArray = tmpFileContent.split("--")
+        tmpFileContentArray.pop(0)
+
+        for i in tmpFileContentArray:
+            scriptDetails = i.split(",")
+            scriptDetails.pop(0)
+
+            scriptName = scriptDetails[0]
+            scriptURL = scriptDetails[1]
+            scriptDesc = scriptDetails[2]
+            scriptFileName = scriptDetails[3]
+            scriptHash = scriptDetails[4]
+            scriptAuthor = scriptDetails[5]
+            scriptCategory = scriptDetails[6]
+
+            if inpScriptName == scriptName:
+                catDir = "./scripts/{c}".format(c=scriptCategory)
+                catDir = Path(catDir)
+
+                if catDir.is_dir():
+                    if inpScriptName == scriptName:
+                        file_name = scriptURL.split("/")[-1]
+                        dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
+                        hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
+                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
+                                                                          f=scriptName)
 
                         scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
 
                         tmpFile = Path(scriptDir)
 
                         if not tmpFile.is_dir():
-                            print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
-                                                                                                         a=scriptAuthor)
-                                  )
+                            print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(
+                                f=file_name,
+                                a=scriptAuthor)
+                            )
                             os.mkdir(scriptDir)
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
                             tmpFile = open(hashScriptDir, "w+")
@@ -330,18 +405,20 @@ def main():
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
                             print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
-                                                                                                      a=scriptAuthor))
+                                                                                                    a=scriptAuthor))
                             tmpFile.close()
                         else:
                             print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
                         break
                 else:
+                    os.mkdir(catDir)
+
                     if inpScriptName == scriptName:
-                        os.mkdir(catDir)
                         file_name = scriptURL.split("/")[-1]
                         dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
                         hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName, f=scriptName)
+                        batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
+                                                                          f=scriptName)
 
                         scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
 
@@ -349,7 +426,7 @@ def main():
 
                         if not tmpFile.is_dir():
                             print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
-                                                                                                         a=scriptAuthor)
+                                                                                                       a=scriptAuthor)
                                   )
                             os.mkdir(scriptDir)
                             Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
@@ -360,107 +437,54 @@ def main():
                                                                                                   a=scriptAuthor,
                                                                                                   f=file_name))
                             print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
-                                                                                                      a=scriptAuthor))
+                                                                                                    a=scriptAuthor))
                             tmpFile.close()
                         else:
                             print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
-                        tmpFile.close()
                         break
-            scriptListFile.close()
-        else:
-            tmpFileContent = requests.get(script_List_Location).content.decode("utf8")
 
-            tmpFileContentArray = tmpFileContent.split("--")
-            tmpFileContentArray.pop(0)
 
-            for i in tmpFileContentArray:
-                scriptDetails = i.split(",")
-                scriptDetails.pop(0)
+def updatescriptlist(args):
+    print("Updating local scripts list...")
+    scriptListFile = open(scriptListDir, "w+")
+    scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
+    scriptListFile.close()
+    print("Updated local scripts list.")
 
-                scriptName = scriptDetails[0]
-                scriptURL = scriptDetails[1]
-                scriptDesc = scriptDetails[2]
-                scriptFileName = scriptDetails[3]
-                scriptHash = scriptDetails[4]
-                scriptAuthor = scriptDetails[5]
-                scriptCategory = scriptDetails[6]
 
-                if inpScriptName == scriptName:
-                    catDir = "./scripts/{c}".format(c=scriptCategory)
-                    catDir = Path(catDir)
+def main():
+    clear()
+    print("---------------------------------------------------------------------------")
+    print("Usage: -command {args}")
+    print("\033[1m-get\033[m \033[31m\"SCRIPT_NAME\"\033[m")
+    print("\033[1m-update\033[m {\033[31m\"SCRIPT_NAME\"\033[m|\033[31m\"all\"\033[m}")
+    print("\033[1m-delete\033[m {\033[31m\"SCRIPT_NAME\"\033[m|\033[31m\"all\"\033[m}")
+    print("\033[1m-updatescriptlist\033[m")
+    print("\033[1m-list\033[m {\033[31mlocal\033[m|\033[31monline\033[m}")
+    print("\033[1m-exit\033[m")
+    print("---------------------------------------------------------------------------")
+    cmdInputRaw = input("Command: ")
+    cmdInput = cmdInputRaw.split()
 
-                    if catDir.is_dir():
-                        if inpScriptName == scriptName:
-                            file_name = scriptURL.split("/")[-1]
-                            dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
-                            hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                            batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
-                                                                              f=scriptName)
+    if cmdInput.__len__() > 0:
+        cmd = cmdInput[0].lower()
+        args = cmdInputRaw[cmd.__len__()::].strip() or None
 
-                            scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
-
-                            tmpFile = Path(scriptDir)
-
-                            if not tmpFile.is_dir():
-                                print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(
-                                                                                                        f=file_name,
-                                                                                                        a=scriptAuthor)
-                                      )
-                                os.mkdir(scriptDir)
-                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                                tmpFile = open(hashScriptDir, "w+")
-                                tmpFile.write(scriptHash)
-                                tmpFile = open(batScriptDir, "w+")
-                                tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
-                                                                                                      a=scriptAuthor,
-                                                                                                      f=file_name))
-                                print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
-                                                                                                        a=scriptAuthor))
-                                tmpFile.close()
-                            else:
-                                print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
-                            break
-                    else:
-                        os.mkdir(catDir)
-                        
-                        if inpScriptName == scriptName:
-                            file_name = scriptURL.split("/")[-1]
-                            dir = "./scripts/{c}/{s}/{f}".format(s=scriptName, f=file_name, c=scriptCategory)
-                            hashScriptDir = "./scripts/{c}/{s}/hash.txt".format(s=scriptName, c=scriptCategory)
-                            batScriptDir = "./scripts/{c}/{s}/{f}.bat".format(c=scriptCategory, s=scriptName,
-                                                                              f=scriptName)
-
-                            scriptDir = "./scripts/{c}/{s}".format(s=scriptName, c=scriptCategory)
-
-                            tmpFile = Path(scriptDir)
-
-                            if not tmpFile.is_dir():
-                                print("Downloading \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m...".format(f=file_name,
-                                                                                                           a=scriptAuthor)
-                                      )
-                                os.mkdir(scriptDir)
-                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
-                                tmpFile = open(hashScriptDir, "w+")
-                                tmpFile.write(scriptHash)
-                                tmpFile = open(batScriptDir, "w+")
-                                tmpFile.write("@echo off\ntitle {s} by {a}\npython {f}\npause".format(s=scriptName,
-                                                                                                      a=scriptAuthor,
-                                                                                                      f=file_name))
-                                print("Downloaded \033[1;2;32m{f}\033[m by \033[1;37m{a}\033[m.".format(f=file_name,
-                                                                                                        a=scriptAuthor))
-                                tmpFile.close()
-                            else:
-                                print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
-                            break
-    elif cmd == "-updatescriptlist":
-        print("Updating local scripts list...")
-        scriptListFile = open(scriptListDir, "w+")
-        scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
-        scriptListFile.close()
-        print("Updated local scripts list.")
-    elif cmd == "-exit":
-        print("Stopping pget...")
-        sys.exit(0)
+        if cmd == "-delete":
+            delete(args)
+        elif cmd == "-list":
+            list(args)
+        elif cmd == "-update":
+            update(args)
+        elif cmd == "-get":
+            get(args)
+        elif cmd == "-updatescriptlist":
+            updatescriptlist(args)
+        elif cmd == "-exit":
+            print("Stopping pget...")
+            sys.exit(0)
+    else:
+        print("No command inputted...")
 
     sleep(2)
     input("Press ENTER to continue...")

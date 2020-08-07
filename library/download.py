@@ -4,8 +4,8 @@ import requests
 class Downloader:
     @staticmethod
     def downloadScriptNoOutput(self, url, dirOfFile):
-        f = open(dirOfFile, "w+")
-        f.write(requests.get(url).content.decode("utf8"))
+        with open(dirOfFile, "w+") as f:
+            f.write(requests.get(url).content.decode("utf8"))
 
     @staticmethod
     def downloadFile(self, url, dirOfFile):
