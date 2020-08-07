@@ -440,7 +440,7 @@ def get(args):
                                                                                                     a=scriptAuthor))
                             tmpFile.close()
                         else:
-                            print("\033[1;2;32m{f}\033[m] already exists..".format(f=scriptName))
+                            print("\033[1;2;32m{f}\033[m already exists..".format(f=scriptName))
                         break
 
 
