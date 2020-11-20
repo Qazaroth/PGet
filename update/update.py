@@ -77,12 +77,12 @@ if hashFileExists:
         localHashFile.close()
         print("There's a new update! Downloading...")
 
-        Downloader.downloadScriptNoOutput(Downloader, upgrade_Hash_Location, hashDir)
-        Downloader.downloadScriptNoOutput(Downloader, pget_location, md + "/pget.py")
-        Downloader.downloadScriptNoOutput(Downloader, readme_location, md + "/README.md")
-        Downloader.downloadScriptNoOutput(Downloader, version_location, binDir + "/version.txt")
-        Downloader.downloadScriptNoOutput(Downloader, upgrade_Script_Location, updateDir + "/update.py")
-        Downloader.downloadScriptNoOutput(Downloader, downloadpy_location, binDir + "/download.py")
+        Downloader.downloadScriptNoOutput(upgrade_Hash_Location, hashDir)
+        Downloader.downloadScriptNoOutput(pget_location, md + "/pget.py")
+        Downloader.downloadScriptNoOutput(readme_location, md + "/README.md")
+        Downloader.downloadScriptNoOutput(version_location, binDir + "/version.txt")
+        Downloader.downloadScriptNoOutput(upgrade_Script_Location, updateDir + "/update.py")
+        Downloader.downloadScriptNoOutput(downloadpy_location, binDir + "/download.py")
 
         print("Successfully updated PGet!")
 else:

@@ -1,12 +1,18 @@
 from pathlib import Path
 from os import system, name
-from library.download import Downloader
+from library.download import downloadFile
 from time import sleep
+
+import subprocess
+
+try:
+    import requests
+except ModuleNotFoundError:
+    subprocess.run(["pip install requests"])
 
 import os
 import shutil
 import sys
-import requests
 
 binDir = "./bin"
 scriptsDir = "./scripts"
@@ -209,7 +215,7 @@ def update(args):
                                       "not updated.".format(f=scriptName))
                             else:
                                 print("There is a new update! Updating {f}...".format(f=scriptName))
-                                Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                downloadFile(scriptURL, dir, True)
                                 tmpFile = open(hashScriptDir, "w+")
                                 tmpFile.write(scriptHash)
                                 tmpFile = open(batScriptDir, "w+")
@@ -262,7 +268,7 @@ def update(args):
                                     print("There is either no new update or your script list is not updated.")
                                 else:
                                     print("There is a new update! Updating {f}...".format(f=scriptName))
-                                    Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                                    downloadFile(scriptURL, dir, True)
                                     tmpFile = open(hashScriptDir, "w+")
                                     tmpFile.write(scriptHash)
                                     tmpFile = open(batScriptDir, "w+")
@@ -312,7 +318,7 @@ def get(args):
                                                                                                    a=scriptAuthor)
                               )
                         os.mkdir(scriptDir)
-                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                        downloadFile(scriptURL, dir, True)
                         tmpFile = open(hashScriptDir, "w+")
                         tmpFile.write(scriptHash)
                         tmpFile = open(batScriptDir, "w+")
@@ -342,7 +348,7 @@ def get(args):
                                                                                                    a=scriptAuthor)
                               )
                         os.mkdir(scriptDir)
-                        Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                        downloadFile(scriptURL, dir, True)
                         tmpFile = open(hashScriptDir, "w+")
                         tmpFile.write(scriptHash)
                         tmpFile = open(batScriptDir, "w+")
@@ -397,7 +403,7 @@ def get(args):
                                 a=scriptAuthor)
                             )
                             os.mkdir(scriptDir)
-                            Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                            downloadFile(scriptURL, dir, True)
                             tmpFile = open(hashScriptDir, "w+")
                             tmpFile.write(scriptHash)
                             tmpFile = open(batScriptDir, "w+")
@@ -429,7 +435,7 @@ def get(args):
                                                                                                        a=scriptAuthor)
                                   )
                             os.mkdir(scriptDir)
-                            Downloader.downloadScriptNoOutput(Downloader, scriptURL, dir)
+                            downloadFile(scriptURL, dir, True)
                             tmpFile = open(hashScriptDir, "w+")
                             tmpFile.write(scriptHash)
                             tmpFile = open(batScriptDir, "w+")
@@ -446,9 +452,7 @@ def get(args):
 
 def updatescriptlist(args):
     print("Updating local scripts list...")
-    scriptListFile = open(scriptListDir, "w+")
-    scriptListFile.write(requests.get(script_List_Location).content.decode("utf8"))
-    scriptListFile.close()
+    downloadFile(script_List_Location, scriptListDir, True)
     print("Updated local scripts list.")
 
 
@@ -494,6 +498,7 @@ def main():
 def init():
     canRun = False
     clear()
+
     hashFile = Path(hashDir)
 
     print("Checking if hash file exists...")
