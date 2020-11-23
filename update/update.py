@@ -8,7 +8,7 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from library.download import Downloader
+from library.download import downloadFile
 
 upgrade_Hash_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/bin/hash.txt"
 upgrade_Script_Location = "https://raw.githubusercontent.com/Qazaroth/PGet/master/update/update.py"
@@ -77,12 +77,12 @@ if hashFileExists:
         localHashFile.close()
         print("There's a new update! Downloading...")
 
-        Downloader.downloadScriptNoOutput(upgrade_Hash_Location, hashDir)
-        Downloader.downloadScriptNoOutput(pget_location, md + "/pget.py")
-        Downloader.downloadScriptNoOutput(readme_location, md + "/README.md")
-        Downloader.downloadScriptNoOutput(version_location, binDir + "/version.txt")
-        Downloader.downloadScriptNoOutput(upgrade_Script_Location, updateDir + "/update.py")
-        Downloader.downloadScriptNoOutput(downloadpy_location, binDir + "/download.py")
+        downloadFile(upgrade_Hash_Location, hashDir)
+        downloadFile(pget_location, md + "/pget.py")
+        downloadFile(readme_location, md + "/README.md")
+        downloadFile(version_location, binDir + "/version.txt")
+        downloadFile(upgrade_Script_Location, updateDir + "/update.py")
+        downloadFile(downloadpy_location, binDir + "/download.py")
 
         print("Successfully updated PGet!")
 else:

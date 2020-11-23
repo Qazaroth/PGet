@@ -5,6 +5,7 @@ https://github.com/Qazaroth/PGet
 
 Changelogs:
 
+v2.3.1  [23-NOV-2020]               Fixed update.py
 v2.3.0  [20-NOV-2020]               Removed some unnecessary functions. (Cleaned download.py)
 v2.2.9  [??-??-2020]                That I forgot about the versions here. :)
 v2.0.1  [??-??-2020]                I am so good at version control
