@@ -3,6 +3,7 @@ from os import system, name, path
 from commands.Command import Command
 from library import settings
 from time import sleep
+from InquirerPy import inquirer
 
 import subprocess
 
@@ -13,24 +14,23 @@ except ModuleNotFoundError:
 
 import os
 
-from commands import fetch, updatescriptlist, exit, list, delete, update
+from commands import fetch, updatescriptlist, exit, list, delete, update, help
+from commands.CommandHandler import CommandHandler
 
-f = fetch.FetchCMD()
-d = delete.DeleteScriptsCMD()
-up = update.UpdateScriptsCMD()
-u = updatescriptlist.UpdateScriptList()
-e = exit.ExitCMD()
-l = list.ListCMD()
+cmdHandler = CommandHandler()
+
+a = [help.HelpCMD(cmdHandler),
+    fetch.FetchCMD(), 
+    delete.DeleteScriptsCMD(), 
+    update.UpdateScriptsCMD(), 
+    list.ListCMD(),
+    updatescriptlist.UpdateScriptList(),
+    exit.ExitCMD()]
+
+for k in a:
+    cmdHandler.addCommand(k.getName(), k)
 
 separator = "-" * 75
-commands = {}
-
-commands[f.getName()] = f
-commands[d.getName()] = d
-commands[up.getName()] = up
-commands[l.getName()] = l
-commands[u.getName()] = u
-commands[e.getName()] = e
 
 def clear():
     command = "clear"
@@ -58,8 +58,8 @@ def printTitle():
         ╚═╝      ╚═════╝ ╚══════╝   ╚═╝   v{}""".format(version))
     print(separator)
     print("Usage: -command {args}")
-    for key in commands:
-        v : Command = commands[key]
+    for key in cmdHandler.getCommands():
+        v : Command = cmdHandler.getCommand(key)
         print(" {} - {}".format(v.getUsage(), v.getDescription()))
     print(separator)
 
@@ -67,20 +67,20 @@ def printTitle():
 def main():
     clear()
     printTitle()
-    cmdInputRaw = input("Command: ")
+    cmdInputRaw = inquirer.text(message="Command: ").execute()
     cmdInput = cmdInputRaw.split()
 
     if cmdInput.__len__() > 0:
         cmd = cmdInput[0].lower()
         args = cmdInputRaw[cmd.__len__()::].strip() or None
 
-        c = commands.get(cmd, None)
+        c = cmdHandler.getCommand(cmd)
         if c is not None:
             c.run(args)
     else:
         print("No command inputted...")
 
-    sleep(2)
+    sleep(1)
     input("Press ENTER to continue...")
     main()
 
