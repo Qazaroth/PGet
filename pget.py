@@ -3,14 +3,20 @@ from os import system, name, path
 from commands.Command import Command
 from library import settings
 from time import sleep
-from InquirerPy import inquirer
 
-import subprocess
+import subprocess, sys
 
 try:
     import requests
 except ModuleNotFoundError:
     subprocess.run(["pip install requests"])
+    sys.exit(0)
+
+try:
+    from InquirerPy import inquirer
+except ModuleNotFoundError:
+    subprocess.run(["pip install inquirerpy"])
+    sys.exit(0)
 
 import os
 

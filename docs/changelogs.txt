@@ -6,6 +6,7 @@ https://github.com/Qazaroth/PGet
 Changelogs:
 
 -- Year 2022
+v2.4.1  [15-JUL-2022]                   Minor bug fixes, ensuring graceful exception handling
 v2.4.0  [15-JUL-2022]                   Added a help command. Allows you to figure out how to use respective commands
 v2.3.3  [15-JUL-2022]                   Disabled auto updating. You now have to manually download new updates!
         [15-JUL-2022]                   Hopefully fixed some minor issues
