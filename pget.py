@@ -2,6 +2,7 @@ from pathlib import Path
 from os import system, name, path
 from commands.Command import Command
 from library import settings
+from library.utils import *
 from time import sleep
 
 import subprocess, sys
@@ -37,13 +38,6 @@ for k in a:
     cmdHandler.addCommand(k.getName(), k)
 
 separator = "-" * 75
-
-def clear():
-    command = "clear"
-    if os.name in ("nt", "dos"):  # If Machine is running on Windows, use cls
-        command = "cls"
-
-    os.system(command)
 
 
 def printTitle():

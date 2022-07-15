@@ -1,5 +1,7 @@
 from commands import Command, CommandHandler
 from InquirerPy import inquirer
+from time import sleep
+from library.utils import *
 
 class HelpCMD(Command.Command):
     def __init__(self, cmdHandler : CommandHandler.CommandHandler() = None) -> None:
@@ -19,12 +21,14 @@ class HelpCMD(Command.Command):
             choices=cmdList,
         ).execute()
 
+        clear()
         c : Command.Command() = cmds[selectedCmd]
         print("Information for {}".format(selectedCmd))
         print("-" * 75)
         print(c.getDescription())
         print("-" * 75)
         print(c.getInfo())
+        sleep(2)
 
     def getUsage(self):
         return "\033[1mhelp\033[m"

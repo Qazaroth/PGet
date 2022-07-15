@@ -39,11 +39,11 @@ command line!
 5. Update feature: PGet also updates itself or at least checks for new updates so that you are always up-to-date.
 
 ## Running PGet
-Before even running PGet, be sure to install `requests` package from pip.
-You can do so by typing: `pip install requests` in a command prompt or powershell or any terminal.
+Before even running PGet, be sure to install `requests` and `inquirerpy` package from pip.
+You can do so by typing: `pip install requests` and `pip install inquirerpy` in a command prompt or powershell or any terminal of your preference.
 
 For Windows Users: You can use the batch files provided <br>
-For Non-Windows Users: I'm not sure...
+For Non-Windows Users: You'll have to manually start the python file yourself.
 
 Here's an example:
 
@@ -54,10 +54,11 @@ Fetching a script named `test` from the server. The easiest way to do this would
         - Type: `python pget.py`
     - If starting **pget.bat**, just double click it and start it like how you start any other applications.
 
-2. Once PGet is running, type in `-get "test"` (The quotation marks are compulsory for fetching scripts and a few other 
-commands)
+2. Once PGet is running, type in `fetch test`
 
 ## Bugs and Fixes:
+Generally for any error, if it doesn't resolve itself or not something stupid done by OS, you can just redownload from the github and it should work. If it doesn't, then do be patient as the developer may be working on it.
+
 If it says that there is no new update while there clearly is, you can navigate to bin/hash.txt and change the value
 inside to 0 or just download the new update from github. This rarely occurs but there are chances it might.
 
