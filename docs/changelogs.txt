@@ -5,6 +5,12 @@ https://github.com/Qazaroth/PGet
 
 Changelogs:
 
+-- Year 2022
+v2.3.2  [18-JUL-2022]               Added a "Banner"
+        [18-JUL-2022]               Made commands more "natural" and arguments easier to be provided
+        [21-MAY-2022]               Moved each command to their respective file.
+
+-- Year 2020
 v2.3.1  [23-NOV-2020]               Fixed update.py
 v2.3.0  [20-NOV-2020]               Removed some unnecessary functions. (Cleaned download.py)
 v2.2.9  [??-??-2020]                That I forgot about the versions here. :)
