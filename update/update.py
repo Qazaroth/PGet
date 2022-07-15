@@ -102,15 +102,15 @@ if hashFileExists and versionFileExists:
             print("There are currently no new updates.")
         else:
             localHashFile.close()
-            print("There's a new update! Downloading...")
+            print("There's a new update! Please download the new version from the github!")
 
-            downloadFile(upgrade_Hash_Location, hashDir)
-            downloadFile(pget_location, md + "/pget.py")
-            downloadFile(readme_location, md + "/README.md")
-            downloadFile(version_location, binDir + "/version.txt")
-            downloadFile(upgrade_Script_Location, updateDir + "/update.py")
-            downloadFile(downloadpy_location, binDir + "/download.py")
+            # downloadFile(upgrade_Hash_Location, hashDir)
+            # downloadFile(pget_location, md + "/pget.py")
+            # downloadFile(readme_location, md + "/README.md")
+            # downloadFile(version_location, binDir + "/version.txt")
+            # downloadFile(upgrade_Script_Location, updateDir + "/update.py")
+            # downloadFile(downloadpy_location, binDir + "/download.py")
 
-            print("Successfully updated PGet!")
+            # print("Successfully updated PGet!")
 else:
     print("Missing hash and/or version file. Please re-download from github!")

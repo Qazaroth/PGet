@@ -1,11 +1,8 @@
 from pathlib import Path
 from os import system, name, path
 from commands.Command import Command
-from library.download import downloadFile
 from library import settings
 from time import sleep
-
-from scriptFunctions import *
 
 import subprocess
 

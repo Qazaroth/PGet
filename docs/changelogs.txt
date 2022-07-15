@@ -6,19 +6,21 @@ https://github.com/Qazaroth/PGet
 Changelogs:
 
 -- Year 2022
-v2.3.2  [18-JUL-2022]               Added a "Banner"
-        [18-JUL-2022]               Made commands more "natural" and arguments easier to be provided
-        [21-MAY-2022]               Moved each command to their respective file.
+v2.3.3  [15-JUL-2022]                   Disabled auto updating. You now have to manually download new updates!
+        [15-JUL-2022]                   Hopefully fixed some minor issues
+v2.3.2  [15-JUL-2022]                   Added a "Banner"
+        [15-JUL-2022]                   Made commands more "natural" and arguments easier to be provided
+        [21-MAY-2022]                   Moved each command to their respective file.
 
 -- Year 2020
-v2.3.1  [23-NOV-2020]               Fixed update.py
-v2.3.0  [20-NOV-2020]               Removed some unnecessary functions. (Cleaned download.py)
-v2.2.9  [??-??-2020]                That I forgot about the versions here. :)
-v2.0.1  [??-??-2020]                I am so good at version control
-v2.0.1  [14-MAY-2020]               Fixed an error, causing application to crash.
-v2.0.0  [14-MAY-2020]               Fixed some typo and added more colours
-        [14-MAY-2020]               Added update command.
-        [14-MAY-2020]               You now need to run it to update scripts.
-        [14-MAY-2020]               Made the program more user friendly by adding colours.
-        [14-MAY-2020]               Added changelogs.txt
-Anything earlier than v2.0.0        Only god knows what happened before...
+v2.3.1  [23-NOV-2020]                   Fixed update.py
+v2.3.0  [20-NOV-2020]                   Removed some unnecessary functions. (Cleaned download.py)
+v2.2.9  [??-??-2020]                    That I forgot about the versions here. :)
+v2.0.1  [??-??-2020]                    I am so good at version control
+v2.0.1  [14-MAY-2020]                   Fixed an error, causing application to crash.
+v2.0.0  [14-MAY-2020]                   Fixed some typo and added more colours
+        [14-MAY-2020]                   Added update command.
+        [14-MAY-2020]                   You now need to run it to update scripts.
+        [14-MAY-2020]                   Made the program more user friendly by adding colours.
+        [14-MAY-2020]                   Added changelogs.txt
+Anything earlier than v2.0.0            Only god knows what happened before...
